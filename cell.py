@@ -6,12 +6,14 @@ from cell_styles import (
     Style
 )
 from constants import (
+    ACCEPTED_WIDTHS,
     ALIGNMENTS,
     BOLD_WIDTH_NAME,
     CENTERED,
     DEFAULT_CELL_ALIGNMENT,
     DEFAULT_MISSING_VALUE,
     DEFAULT_STYLE_NAME,
+    DEFAULT_WIDTH,
     LEFT_ALIGNED,
     RIGHT_ALIGNED,
     THIN_WIDTH_NAME,
@@ -39,46 +41,54 @@ class Cell:
             'align_sign_center': False,
         }
         self.__text_width: str = ''
+        self.__text_color: str = ''
         self.__formatted_value: str = ''
         self.__value_line: str = ''
-        self.__upper_line: str = ''
-        self.__lower_line: str = ''
+        self.__upper_border: str = ''
+        self.__lower_border: str = ''
         self.__alignment: str = DEFAULT_CELL_ALIGNMENT
         self.__float_column_widths: Tuple[int, int, int] = []
-        
-    def __call__(self, 
-                 value, 
-                 width: int,
-                 bold_borders: Dict[str, bool] = {},
-                 bold_text: bool = False,
-                 text_color = None,
-                 float_widths: Tuple[int, int, int] = []):
-        """
-        To set the width of the borders, add any of these
-        keys to the bold_border parameter in a dict::
-        
-            'left'
-            'right'
-            'up'
-            'down'
-            'up_left_corner'
-            'up_right_corner'
-            'down_left_corner'
-            'down_right_corner'
-            'align_sign_left'
-            'align_sign_right'
-            'align_sign_center'
-
-        """
-        self.value = str(value)
-        self.width = int(width)
-        
-        return self
+        self.__show_upper_border = True
+        self.__show_lower_border = True
+        self.__show_left_border = True
+        self.__show_right_border = True
+        self.__show_upper_align_sign = False
+        self.__show_lower_align_sign = False
+        self.__persistent_cell_size = False
+        self.__keep_upper_left_corner = False
+        self.__keep_upper_right_corner = False
+        self.__keep_lower_left_corner = False
+        self.__keep_lower_right_corner = False
         
     def craft(self):
+        cell_parts = []
+        
+        self.__format_up_line()
+        if self.__persistent_cell_size or self.__show_upper_border:
+            cell_parts.append(self.__upper_border)
         self.__format_value()
         self.__format_value_line()
-        print(self.__value_line)
+        cell_parts.append(self.__value_line)
+        self.__format_down_line()
+        if self.__persistent_cell_size or self.__show_lower_border:
+            cell_parts.append(self.__lower_border)
+
+        print('\n'.join(cell_parts))
+        
+    @staticmethod
+    def __check_border_width(width_name) -> bool:
+        try:
+            return ACCEPTED_WIDTHS[width_name]
+        except KeyError:
+            return DEFAULT_WIDTH
+        
+    @staticmethod
+    def __empty_placeholder(value) -> str:
+        return ' ' * value.__len__()
+    
+    @staticmethod
+    def __empty_placeholder_no_value(width: int) -> str:
+        return ' ' * width
     
     # (o==================================================================o)
     #   CELL PROPERTIES SECTION (START)
@@ -89,6 +99,10 @@ class Cell:
     @property
     def style(self) -> Style:
         return style_names[self.__style_name]
+
+    @property
+    def margin(self) -> int:
+        return self.style.margin
     
     @property
     def alignment(self) -> str:
@@ -98,10 +112,140 @@ class Cell:
         One of::
         
             'l', 'r', 'c', 'f', 'b'
-        """
+        """ 
         return self.__alignment
     
+    @property
+    def value(self) -> str:
+        return self.__value
+    
+    @property
+    def width(self) -> int:
+        return self.__width
+    
+    @property
+    def left_width(self) -> str:
+        return self.__get_border_width(
+            'left'
+        )
+        
+    @property
+    def right_width(self) -> str:
+        return self.__get_border_width(
+            'right'
+        )
+        
+    @property
+    def up_width(self) -> str:
+        return self.__get_border_width(
+            'up'
+        )
+        
+    @property
+    def down_width(self) -> str:
+        return self.__get_border_width(
+            'down'
+        )
+        
+    @property
+    def up_left_corner_width(self) -> str:
+        return self.__get_border_width(
+            'up_left_corner'
+        )
+        
+    @property
+    def up_right_corner_width(self) -> str:
+        return self.__get_border_width(
+            'up_right_corner'
+        )
+        
+    @property
+    def down_left_corner_width(self) -> str:
+        return self.__get_border_width(
+            'down_left_corner'
+        )
+        
+    @property
+    def down_right_corner_width(self) -> str:
+        return self.__get_border_width(
+            'down_right_corner'
+        )
+        
+    @property
+    def align_sign_left_width(self) -> str:
+        return self.__get_border_width(
+            'align_sign_left'
+        )
+        
+    @property
+    def align_sign_right_width(self) -> str:
+        return self.__get_border_width(
+            'align_sign_right'
+        )
+        
+    @property
+    def align_sign_center_width(self) -> str:
+        return self.__get_border_width(
+            'align_sign_center'
+        )
+        
+    @property
+    def bold_text(self):
+        return self.__text_width
+
+    @property
+    def float_widths(self):
+        return self.__float_column_widths
+    
+    @property
+    def show_upper_border(self) -> bool:
+        return self.__show_upper_border
+    
+    @property
+    def show_left_border(self) -> bool:
+        return self.__show_left_border
+    
+    @property
+    def show_lower_border(self) -> bool:
+        return self.__show_lower_border
+    
+    @property
+    def show_right_border(self) -> bool:
+        return self.__show_right_border
+    
+    @property
+    def show_upper_align_sign(self) -> bool:
+        return self.__show_upper_align_sign
+    
+    @property
+    def show_lower_align_sign(self) -> bool:
+        return self.__show_lower_align_sign
+    
+    @property
+    def persistent_cell_size(self) -> bool:
+        return self.__persistent_cell_size
+    
+    @property
+    def keep_upper_left_corner(self) -> bool:
+        return self.__keep_upper_left_corner
+
+    @property
+    def keep_upper_right_corner(self) -> bool:
+        return self.__keep_upper_right_corner
+
+    @property
+    def keep_lower_left_corner(self) -> bool:
+        return self.__keep_lower_left_corner
+
+    @property
+    def keep_lower_right_corner(self) -> bool:
+        return self.__keep_lower_right_corner
+
     # (o-----------------------------------------( PRIVATE ))
+    
+    @property
+    def __middle_line_width(self):
+        return self.__width + (self.margin * 2)
     
     
     # (o-----------------------------------------------------------/\-----o)
@@ -122,6 +266,125 @@ class Cell:
         except KeyError:
             pass
     
+    @value.setter
+    def value(self, new_value):
+        self.__value = str(new_value)
+        
+    @width.setter
+    def width(self, new_width):
+        try:
+            self.__width = int(new_width)
+        except ValueError:
+            pass
+    
+    @left_width.setter    
+    def left_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['left'] = width_to_set
+
+    @right_width.setter        
+    def right_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['right'] = width_to_set
+
+    @up_width.setter        
+    def up_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['up'] = width_to_set
+
+    @down_width.setter        
+    def down_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['down'] = width_to_set
+
+    @up_left_corner_width.setter        
+    def up_left_corner_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['up_left_corner'] = width_to_set
+
+    @up_right_corner_width.setter        
+    def up_right_corner_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['up_right_corner'] = width_to_set
+
+    @down_left_corner_width.setter        
+    def down_left_corner_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['down_left_corner'] = width_to_set
+
+    @down_right_corner_width.setter        
+    def down_right_corner_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['down_right_corner'] = width_to_set
+
+    @align_sign_left_width.setter        
+    def align_sign_left_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['align_sign_left'] = width_to_set
+
+    @align_sign_right_width.setter        
+    def align_sign_right_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['align_sign_right'] = width_to_set
+
+    @align_sign_center_width.setter        
+    def align_sign_center_width(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__border_width['align_sign_center'] = width_to_set
+
+    @bold_text.setter
+    def bold_text(self, new_width) -> str:
+        width_to_set = self.__check_border_width(new_width)
+        self.__text_width = width_to_set
+
+    # @property
+    # def float_widths(self):
+    #     return self.__float_column_widths
+    
+    @show_upper_border.setter    
+    def show_upper_border(self, value):
+        self.__show_upper_border = bool(value)
+
+    @show_left_border.setter        
+    def show_left_border(self, value):
+        self.__show_left_border = bool(value)
+
+    @show_lower_border.setter        
+    def show_lower_border(self, value):
+        self.__show_lower_border = bool(value)
+
+    @show_right_border.setter        
+    def show_right_border(self, value):
+        self.__show_right_border = bool(value)
+
+    @show_upper_align_sign.setter        
+    def show_upper_align_sign(self, value):
+        self.__show_upper_align_sign = bool(value)
+
+    @show_lower_align_sign.setter        
+    def show_lower_align_sign(self, value):
+        self.__show_lower_align_sign = bool(value)
+    
+    @persistent_cell_size.setter
+    def persistent_cell_size(self, value):
+        self.__persistent_cell_size = bool(value)
+        
+    @keep_upper_left_corner.setter
+    def keep_upper_left_corner(self, value):
+        self.__keep_upper_left_corner = bool(value)
+
+    @keep_upper_right_corner.setter
+    def keep_upper_right_corner(self, value):
+        self.__keep_upper_right_corner = bool(value)
+
+    @keep_lower_left_corner.setter
+    def keep_lower_left_corner(self, value):
+        self.__keep_lower_left_corner = bool(value)
+
+    @keep_lower_right_corner.setter
+    def keep_lower_right_corner(self, value):
+        self.__keep_lower_right_corner = bool(value)
+        
     
     # (o-----------------------------------------------------------/\-----o)
     #   SETTERS SECTION (END)
@@ -129,32 +392,180 @@ class Cell:
     
     
     def __format_value(self) -> None:
-        margin = self.style.margin
-        width = self.width
-        value = self.value
+        margin = self.margin
+        width = self.__width
+        value = self.__value
         alignment = self.__check_alignment()
         self.__formatted_value =  (
             f'{"":{margin}}{value:{alignment}{width}}{"":{margin}}'
         )   
     
-    def __format_value_line(self) -> str:
+    def __format_value_line(self) -> None:
+        parts = []
+        
         left = self.__get_border_part(
             self.style.left,
             'left'
         )
+        if self.__show_left_border:
+            parts.append(left)
+        else:
+            if self.__persistent_cell_size:
+                parts.append(
+                    self.__empty_placeholder(left)
+                )
+        parts.append(self.__formatted_value)
         right = self.__get_border_part(
             self.style.right,
             'right'
         )
+        if self.__show_right_border:
+            parts.append(right)
+        else:
+            if self.__persistent_cell_size:
+                parts.append(
+                    self.__empty_placeholder(right)
+                )
+            
         self.__value_line = (
-            ''.join([left, self.__formatted_value, right])
+            ''.join(parts)
         )
         
-    def __get_border_part(self, part, part_name: str) -> str:
-        width = self.__get_width(part_name)
-        return part(width)
+    def __format_up_line(self) -> None:
         
-    def __get_width(self, part_name: str) -> str:
+        up = self.__get_border_part(
+            self.style.up,
+            'up'
+        )
+        if not self.__show_upper_border:
+            up = self.__empty_placeholder(up)
+        
+        left_corner = self.__get_border_part(
+            self.style.up_left_corner,
+            'up_left_corner'
+        )
+        if not self.__keep_upper_left_corner:
+            if not self.__show_left_border and not self.__show_upper_border:
+                if self.__persistent_cell_size:
+                    left_corner = self.__empty_placeholder(left_corner)
+                else:
+                    left_corner = ''
+            elif not self.__show_left_border and self.__show_upper_border:
+                if self.__persistent_cell_size:
+                    left_corner = up
+                else:
+                    left_corner = ''
+            elif self.__show_left_border and not self.__show_upper_border:
+                if self.__persistent_cell_size:
+                    left_corner = self.__get_border_part(
+                        self.style.left,
+                        'left'
+                    )
+                else:
+                    left_corner = ''
+        
+        right_corner = self.__get_border_part(
+            self.style.up_right_corner,
+            'up_right_corner'
+        )
+        if not self.__keep_upper_right_corner:
+            if not self.__show_right_border and not self.__show_upper_border:
+                if self.__persistent_cell_size:
+                    right_corner = self.__empty_placeholder(right_corner)
+                else:
+                    right_corner = ''
+            elif not self.__show_right_border and self.__show_upper_border:
+                if self.__persistent_cell_size:
+                    right_corner = up
+                else:
+                    right_corner = ''
+            elif self.__show_right_border and not self.__show_upper_border:
+                if self.__persistent_cell_size:
+                    right_corner = self.__get_border_part(
+                        self.style.right,
+                        'right'
+                    )
+                else:
+                    right_corner = ''
+            
+        self.__upper_border = self.__format_mid_line(
+            left=left_corner,
+            middle=up,
+            right=right_corner
+        )
+        
+    def __format_down_line(self) -> None:
+            
+        down = self.__get_border_part(
+            self.style.down,
+            'down'
+        )
+        if not self.__show_lower_border:
+            down = self.__empty_placeholder(down)
+            
+        left_corner = self.__get_border_part(
+            self.style.down_left_corner,
+            'down_left_corner'
+        )
+        if not self.keep_lower_left_corner:
+            if not self.__show_left_border and not self.__show_lower_border:
+                if self.__persistent_cell_size:
+                    left_corner = self.__empty_placeholder(left_corner)
+                else:
+                    left_corner = ''
+            elif not self.__show_left_border and self.__show_lower_border:
+                if self.__persistent_cell_size:
+                    left_corner = down
+                else:
+                    left_corner = ''
+            elif self.__show_left_border and not self.__show_lower_border:
+                if self.__persistent_cell_size:
+                    left_corner = self.__get_border_part(
+                        self.style.left,
+                        'left'
+                    )
+                else:
+                    left_corner = ''
+            
+        right_corner = self.__get_border_part(
+            self.style.down_right_corner,
+            'down_right_corner'
+        )
+        if not self.keep_lower_right_corner:
+            if not self.__show_right_border and not self.__show_lower_border:
+                if self.__persistent_cell_size:
+                    right_corner = self.__empty_placeholder(right_corner)
+                else:
+                    right_corner = ''
+            elif not self.__show_right_border and self.__show_lower_border:
+                if self.__persistent_cell_size:
+                    right_corner = down
+                else:
+                    right_corner = ''
+            elif self.__show_right_border and not self.__show_lower_border:
+                if self.__persistent_cell_size:
+                    right_corner = self.__get_border_part(
+                        self.style.right,
+                        'right'
+                    )
+                else:
+                    right_corner = ''
+            
+        self.__lower_border = self.__format_mid_line(
+            left=left_corner,
+            middle=down,
+            right=right_corner
+        )
+    
+    def __format_mid_line(self, left, middle, right) -> str:
+        mid_width = self.__middle_line_width
+        return f'{left}{middle*mid_width}{right}'
+        
+    def __get_border_part(self, part, part_name: str) -> str:
+        width = self.__get_border_width(part_name)
+        return part[width]
+        
+    def __get_border_width(self, part_name: str) -> str:
         if self.__border_width[part_name] is True:
             return BOLD_WIDTH_NAME
         else:
