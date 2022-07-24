@@ -1,5 +1,5 @@
 
-from typing import Dict, Tuple
+from typing import Dict, Tuple, List
 
 from cell_styles import (
     style_names,
@@ -13,7 +13,7 @@ from constants import (
     DEFAULT_CELL_ALIGNMENT,
     DEFAULT_MISSING_VALUE,
     DEFAULT_STYLE_NAME,
-    DEFAULT_WIDTH,
+    DEFAULT_BORDER_WIDTH,
     LEFT_ALIGNED,
     RIGHT_ALIGNED,
     THIN_WIDTH_NAME,
@@ -28,17 +28,17 @@ class Cell:
         self.__value = DEFAULT_MISSING_VALUE
         self.__width: int = 0
         self.__border_width: Dict[str, bool] = {
-            'left': False,
-            'right': False,
-            'up': False,
-            'down': False,
-            'up_left_corner': False,
-            'up_right_corner': False,
-            'down_left_corner': False,
-            'down_right_corner': False,
-            'align_sign_left': False,
-            'align_sign_right': False,
-            'align_sign_center': False,
+            'left': DEFAULT_BORDER_WIDTH,
+            'right': DEFAULT_BORDER_WIDTH,
+            'up': DEFAULT_BORDER_WIDTH,
+            'down': DEFAULT_BORDER_WIDTH,
+            'up_left_corner': DEFAULT_BORDER_WIDTH,
+            'up_right_corner': DEFAULT_BORDER_WIDTH,
+            'down_left_corner': DEFAULT_BORDER_WIDTH,
+            'down_right_corner': DEFAULT_BORDER_WIDTH,
+            'align_sign_left': DEFAULT_BORDER_WIDTH,
+            'align_sign_right': DEFAULT_BORDER_WIDTH,
+            'align_sign_center': DEFAULT_BORDER_WIDTH,
         }
         self.__text_width: str = ''
         self.__text_color: str = ''
@@ -60,7 +60,7 @@ class Cell:
         self.__keep_lower_left_corner = False
         self.__keep_lower_right_corner = False
         
-    def craft(self):
+    def craft(self) -> List[str]:
         cell_parts = []
         
         self.__format_up_line()
@@ -73,14 +73,14 @@ class Cell:
         if self.__persistent_cell_size or self.__show_lower_border:
             cell_parts.append(self.__lower_border)
 
-        print('\n'.join(cell_parts))
+        return cell_parts
         
     @staticmethod
     def __check_border_width(width_name) -> bool:
         try:
             return ACCEPTED_WIDTHS[width_name]
         except KeyError:
-            return DEFAULT_WIDTH
+            return DEFAULT_BORDER_WIDTH
         
     @staticmethod
     def __empty_placeholder(value) -> str:
