@@ -25,34 +25,36 @@ class CelularTable:
             ['Otro Más', 37, 'Ciudad'],
             ['Último Ya', 24, 'Ciudad'],
         ]
+        self.column_count = 3
+        self.row_count = 4
         self.show_headers = True
         self.column_alignments = ['l', 'r', 'l']
         self.column_widths = [20, 9, 10]
         self.__rows_config = {
-            'upper': [
-                self.__left_mid_upper_border_cell,
-                self.__penult_upper_border_cell,
-                self.__right_upper_border_cell,
-                UPPER_LOWER_CELL_ROW_HEIGHT,
-            ],
-            'middle': [
-                self.__left_mid_middle_cell,
-                self.__penult_middle_cell,
-                self.__right_middle_cell,
-                UPPER_LOWER_CELL_ROW_HEIGHT,
-            ],
-            'penult': [
-                self.__left_mid_double_border_cell,
-                self.__penult_double_border_cell,
-                self.__right_double_border_cell,
-                PENULT_CELL_ROW_HEIGHT,
-            ],
-            'lower': [
-                self.__left_mid_lower_border_cell,
-                self.__penult_lower_border_cell,
-                self.__right_lower_border_cell,
-                UPPER_LOWER_CELL_ROW_HEIGHT
-            ]
+            'upper': {
+                'left_cell': self.__left_mid_upper_border_cell,
+                'penult_cell': self.__penult_upper_border_cell,
+                'right_cell': self.__right_upper_border_cell,
+                'row_height': UPPER_LOWER_CELL_ROW_HEIGHT,
+            },
+            'middle': {
+                'left_cell': self.__left_mid_middle_cell,
+                'penult_cell': self.__penult_middle_cell,
+                'right_cell': self.__right_middle_cell,
+                'row_height': UPPER_LOWER_CELL_ROW_HEIGHT,
+            },
+            'penult': {
+                'left_cell': self.__left_mid_double_border_cell,
+                'penult_cell': self.__penult_double_border_cell,
+                'right_cell': self.__right_double_border_cell,
+                'row_height': PENULT_CELL_ROW_HEIGHT,
+            },
+            'lower': {
+                'left_cell': self.__left_mid_lower_border_cell,
+                'penult_cell': self.__penult_lower_border_cell,
+                'right_cell': self.__right_lower_border_cell,
+                'row_height': UPPER_LOWER_CELL_ROW_HEIGHT,
+            },
         }
 
     
@@ -66,13 +68,14 @@ class CelularTable:
     def craft(self):
         all_rows = self.__create_all_rows(
             alignment=self.column_alignments,
-            width=self.column_widths
+            cols_widths=self.column_widths
         )
         headers = self.__create_row(
-            *self.__rows_config['penult'],
+            **self.__rows_config['upper'],
             value=self.headers,
             alignment=self.column_alignments,
-            width=self.column_widths
+            width=self.column_widths,
+            show_lower_border=[False]*self.column_count
             
         )
         print('\n'.join(headers))
@@ -80,19 +83,20 @@ class CelularTable:
 
     # (o-----------------------------------------( PRIVATE ))
     
-    def __create_all_rows(self, alignment, width):
+    def __create_all_rows(self, alignment, cols_widths):
         rows = []
+        
         
         # UPPER ROW
         try:
-            # At least two rows needed
             self.rows[AT_LEAST_TWO]
             rows.append('\n'.join(self.__create_row(
-                *self.__rows_config['upper'],
+                **self.__rows_config['upper'],
                 value=self.rows[FIRST],
                 alignment=alignment,
-                width=width
-            )))
+                width=cols_widths,
+                # show_upper_border=show_upper_border,
+                )))
         except IndexError:
             pass
         
@@ -102,10 +106,10 @@ class CelularTable:
             self.rows[AT_LEAST_FOUR]
             for mid_row in self.rows[SECOND_TO_ANTE_PENULT]:
                 rows.append('\n'.join(self.__create_row(
-                    *self.__rows_config['middle'],
+                    **self.__rows_config['middle'],
                     value=mid_row,
                     alignment=alignment,
-                    width=width
+                    width=cols_widths
                 )))
         except IndexError:
             pass
@@ -114,19 +118,19 @@ class CelularTable:
         try:
             self.rows[AT_LEAST_THREE]
             rows.append('\n'.join(self.__create_row(
-                *self.__rows_config['penult'],
+                **self.__rows_config['penult'],
                 value=self.rows[PENULT],
                 alignment=alignment,
-                width=width
+                width=cols_widths
             )))
         except IndexError:
             try:
                 self.rows[AT_LEAST_ONE]
                 rows.append('\n'.join(self.__create_row(
-                    *self.__rows_config['penult'],
+                    **self.__rows_config['penult'],
                     value=self.rows[LAST],
                     alignment=alignment,
-                    width=width
+                    width=cols_widths
                 )))
             except IndexError:
                 pass
@@ -135,10 +139,10 @@ class CelularTable:
         try:
             self.rows[AT_LEAST_THREE]
             rows.append('\n'.join(self.__create_row(
-                *self.__rows_config['lower'],
+                **self.__rows_config['lower'],
                 value=self.rows[LAST],
                 alignment=alignment,
-                width=width
+                width=cols_widths
             )))
         except IndexError:
             pass
@@ -217,6 +221,7 @@ class CelularTable:
             penult=penult_cell,
             right=right_cell,
         )
+        
         param_groups = self.__get_groups_of_parameters(cells_parameters)
         unjoined_cells = []
         for cell_config_i, _ in enumerate(cells_to_craft):
@@ -227,6 +232,7 @@ class CelularTable:
             )
             cell_parts = obj_cell.craft()
             unjoined_cells.append(cell_parts)
+            
         
         joined_cell_parts = []
         for part_i in range(row_height):
@@ -238,6 +244,7 @@ class CelularTable:
             ))
             joined_cell_parts.append(joined_part)
         
+
         return joined_cell_parts
     
     @staticmethod
@@ -257,7 +264,6 @@ class CelularTable:
     
     def __create_cell(self, cell_creator, parameters: dict) -> Cell:
         return cell_creator(parameters)
-
     
     # (o-----------------------------------------------------------/\-----o)
     #   TABLE CRAFTING SECTION (END)
@@ -372,7 +378,6 @@ class CelularTable:
         
         return cell
 
-
     # (o==================================================================o)
     #   UPPER ROW CRAFTING SECTION (START)
     #   upper and middle rows of cells
@@ -440,7 +445,7 @@ class CelularTable:
     
     
     # (o==================================================================o)
-    #   PENULT ROW SECTION (START)
+    #   PENULT ROW CRAFTING SECTION (START)
     #   penult rows of cells
     # (o-----------------------------------------------------------\/-----o)
        
@@ -465,7 +470,7 @@ class CelularTable:
         return right_cell
     
     # (o-----------------------------------------------------------/\-----o)
-    #   PENULT ROW SECTION (END)
+    #   PENULT ROW CRAFTING SECTION (END)
     # (o==================================================================o)
     
     
@@ -499,6 +504,25 @@ class CelularTable:
     
     # (o-----------------------------------------------------------/\-----o)
     #   LOWER ROW CRAFTING SECTION (END)
+    # (o==================================================================o)
+    
+    
+    # (o==================================================================o)
+    #   SPECIAL CELL CASES CRAFTING SECTION (START)
+    #   special cell structures that are needed in unique situations
+    # (o-----------------------------------------------------------\/-----o)
+    
+    # def __empty_header_cell(self, params: dict) -> Cell:
+    #     empty_h_cell = Cell()
+    #     empty_h_cell.show_upper_border = False
+    #     empty_h_cell.show_left_border = False
+    #     empty_h_cell.show_right_border = False
+    #     empty_h_cell = self.__add_cell_params(empty_h_cell, params)
+        
+    #     return empty_h_cell
+    
+    # (o-----------------------------------------------------------/\-----o)
+    #   SPECIAL CELL CASES CRAFTING SECTION (END)
     # (o==================================================================o)
         
         
