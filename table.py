@@ -20,17 +20,23 @@ class CelularTable:
     def __init__(self) -> None:
         self.headers = ['HEADER1', 'HEADER2']
         self.rows = [
-            ['Primer Nombre', 20, 'Ciudad'],
-            ['Nombre Hipotético', 45, 'Ciudad'],
-            ['Otro Más', 37, 'Ciudad'],
-            ['Último Ya', 24, 'Ciudad'],
+            ['Primer Nombre', 20, 'Ciudad', 50],
+            ['Nombre Hipotético', 45, 'Ciudad', 10],
+            ['Otro Más', 37, 'Ciudad', 1],
+            ['Último Ya', 24, 'Ciudad', 3],
         ]
         self.column_count = 3
         self.row_count = 4
         self.show_headers = True
-        self.column_alignments = ['l', 'r', 'l']
-        self.column_widths = [20, 9, 10]
+        self.column_alignments = ['l', 'r', 'l', 'r']
+        self.column_widths = [20, 9, 10, 5]
         self.__rows_config = {
+            'header': {
+                'left_cell': self.__left_mid_header_cell,
+                'penult_cell': self.__penult_header_cell,
+                'right_cell': self.__right_header_cell,
+                'row_height':UPPER_LOWER_CELL_ROW_HEIGHT,
+            },
             'upper': {
                 'left_cell': self.__left_mid_upper_border_cell,
                 'penult_cell': self.__penult_upper_border_cell,
@@ -71,7 +77,7 @@ class CelularTable:
             cols_widths=self.column_widths
         )
         headers = self.__create_row(
-            **self.__rows_config['upper'],
+            **self.__rows_config['header'],
             value=self.headers,
             alignment=self.column_alignments,
             width=self.column_widths,
@@ -377,6 +383,47 @@ class CelularTable:
             pass
         
         return cell
+    
+    def __upper_border_bold_if_header(self, cell: Cell) -> Cell:
+        if self.headers is not None and self.show_headers:
+            cell.up_right_corner_width = 'bold'
+            cell.up_left_corner_width = 'bold'
+            cell.up_width = 'bold'
+        
+        return cell
+    
+    # (o==================================================================o)
+    #   HEADER ROW CRAFTING SECTION (START)
+    #   upper and middle rows of cells
+    # (o-----------------------------------------------------------\/-----o)
+    
+    def __left_mid_header_cell(self, params: dict) -> Cell:
+        left_cell = Cell()
+        left_cell.show_right_border = False
+        left_cell.show_lower_border = False
+        left_cell = self.__add_cell_params(left_cell, params)
+
+        return left_cell
+    
+    def __penult_header_cell(self, params: dict) -> Cell:
+        penult_cell = Cell()
+        penult_cell.show_lower_border = False
+        penult_cell = self.__add_cell_params(penult_cell, params)
+        
+        return penult_cell
+
+    def __right_header_cell(self, params: dict) -> Cell:
+        right_cell = Cell()
+        right_cell.show_left_border = False
+        right_cell.show_lower_border = False
+        right_cell = self.__add_cell_params(right_cell, params)
+
+        return right_cell
+    
+    # (o-----------------------------------------------------------/\-----o)
+    #   HEADER ROW CRAFTING SECTION (END)
+    # (o==================================================================o)
+    
 
     # (o==================================================================o)
     #   UPPER ROW CRAFTING SECTION (START)
@@ -387,6 +434,7 @@ class CelularTable:
         left_cell = Cell()
         left_cell.show_right_border = False
         left_cell.show_lower_border = False
+        left_cell = self.__upper_border_bold_if_header(left_cell)
         left_cell = self.__add_cell_params(left_cell, params)
 
         return left_cell
@@ -394,6 +442,7 @@ class CelularTable:
     def __penult_upper_border_cell(self, params: dict) -> Cell:
         penult_cell = Cell()
         penult_cell.show_lower_border = False
+        penult_cell = self.__upper_border_bold_if_header(penult_cell)
         penult_cell = self.__add_cell_params(penult_cell, params)
         
         return penult_cell
@@ -402,6 +451,7 @@ class CelularTable:
         right_cell = Cell()
         right_cell.show_left_border = False
         right_cell.show_lower_border = False
+        right_cell = self.__upper_border_bold_if_header(right_cell)
         right_cell = self.__add_cell_params(right_cell, params)
 
         return right_cell
