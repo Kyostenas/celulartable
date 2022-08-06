@@ -1,5 +1,4 @@
 
-
 # (o==================================================================o)
 #   CELL SECTION (START)
 #   constants created for the Cell class.
@@ -52,6 +51,8 @@ AT_LEAST_TWO = 1
 AT_LEAST_THREE = 2
 AT_LEAST_FOUR = 3
 SECOND_TO_ANTE_PENULT = slice(1, -2)
+
+DEFAULT_MISSING_VALUE = ''
 
 # (o-----------------------------------------------------------/\-----o)
 #   CELULARTABLE SECTION (END)

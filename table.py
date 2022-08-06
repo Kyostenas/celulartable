@@ -1,10 +1,10 @@
 from typing import List
 
 from cell import Cell
+from cell_rows import create_rows_config
 from constants import (
     AT_LEAST_THREE,
-    UPPER_LOWER_CELL_ROW_HEIGHT,
-    PENULT_CELL_ROW_HEIGHT,
+    DEFAULT_MISSING_VALUE,
     SECOND_TO_ANTE_PENULT,
     AT_LEAST_ONE,
     AT_LEAST_TWO,
@@ -28,40 +28,10 @@ class CelularTable:
         self.column_count = 3
         self.row_count = 4
         self.show_headers = True
-        self.column_alignments = ['l', 'r', 'l', 'r']
+        self.column_alignments = ['l', 'r', 'c', 'r']
         self.column_widths = [20, 9, 10, 5]
-        self.__rows_config = {
-            'header': {
-                'left_cell': self.__left_mid_header_cell,
-                'penult_cell': self.__penult_header_cell,
-                'right_cell': self.__right_header_cell,
-                'row_height':UPPER_LOWER_CELL_ROW_HEIGHT,
-            },
-            'upper': {
-                'left_cell': self.__left_mid_upper_border_cell,
-                'penult_cell': self.__penult_upper_border_cell,
-                'right_cell': self.__right_upper_border_cell,
-                'row_height': UPPER_LOWER_CELL_ROW_HEIGHT,
-            },
-            'middle': {
-                'left_cell': self.__left_mid_middle_cell,
-                'penult_cell': self.__penult_middle_cell,
-                'right_cell': self.__right_middle_cell,
-                'row_height': UPPER_LOWER_CELL_ROW_HEIGHT,
-            },
-            'penult': {
-                'left_cell': self.__left_mid_double_border_cell,
-                'penult_cell': self.__penult_double_border_cell,
-                'right_cell': self.__right_double_border_cell,
-                'row_height': PENULT_CELL_ROW_HEIGHT,
-            },
-            'lower': {
-                'left_cell': self.__left_mid_lower_border_cell,
-                'penult_cell': self.__penult_lower_border_cell,
-                'right_cell': self.__right_lower_border_cell,
-                'row_height': UPPER_LOWER_CELL_ROW_HEIGHT,
-            },
-        }
+        self.missing_value = DEFAULT_MISSING_VALUE
+        self.__rows_config = create_rows_config()
 
     
     # (o==================================================================o)
@@ -86,6 +56,9 @@ class CelularTable:
         )
         print('\n'.join(headers))
         print('\n'.join(all_rows))
+        
+    def add_row(): pass
+    def add_column(): pass
 
     # (o-----------------------------------------( PRIVATE ))
     
@@ -275,305 +248,10 @@ class CelularTable:
     #   TABLE CRAFTING SECTION (END)
     # (o==================================================================o)
     
-    @staticmethod
-    def __add_cell_params(cell: Cell, params: dict):
-        try:
-            cell.alignment = params['alignment']
-        except KeyError:
-            pass
-        try:
-            cell.value = params['value']
-        except KeyError:
-            pass
-        try:
-            cell.width = params['width']
-        except KeyError:
-            pass
-        try:
-            cell.left_width = params['left_width']
-        except KeyError:
-            pass
-        try:
-            cell.right_width = params['right_width']
-        except KeyError:
-            pass
-        try:
-            cell.up_width = params['up_width']
-        except KeyError:
-            pass
-        try:
-            cell.down_width = params['down_width']
-        except KeyError:
-            pass
-        try:
-            cell.up_left_corner_width = params['up_left_corner_width']
-        except KeyError:
-            pass
-        try:
-            cell.up_right_corner_width = params['up_right_corner_width']
-        except KeyError:
-            pass
-        try:
-            cell.down_left_corner_width = params['down_left_corner_width']
-        except KeyError:
-            pass
-        try:
-            cell.down_right_corner_width = params['down_right_corner_width']
-        except KeyError:
-            pass
-        try:
-            cell.align_sign_left_width = params['align_sign_left_width']
-        except KeyError:
-            pass
-        try:
-            cell.align_sign_right_width = params['align_sign_right_width']
-        except KeyError:
-            pass
-        try:
-            cell.align_sign_center_width = params['align_sign_center_width']
-        except KeyError:
-            pass
-        try:
-            cell.bold_text = params['bold_text']
-        except KeyError:
-            pass
-        try:
-            cell.show_upper_border = params['show_upper_border']
-        except KeyError:
-            pass
-        try:
-            cell.show_left_border = params['show_left_border']
-        except KeyError:
-            pass
-        try:
-            cell.show_lower_border = params['show_lower_border']
-        except KeyError:
-            pass
-        try:
-            cell.show_right_border = params['show_right_border']
-        except KeyError:
-            pass
-        try:
-            cell.show_upper_align_sign = params['show_upper_align_sign']
-        except KeyError:
-            pass
-        try:
-            cell.show_lower_align_sign = params['show_lower_align_sign']
-        except KeyError:
-            pass
-        try:
-            cell.persistent_cell_size = params['persistent_cell_size']
-        except KeyError:
-            pass
-        try:
-            cell.keep_upper_left_corner = params['keep_upper_left_corner']
-        except KeyError:
-            pass
-        try:
-            cell.keep_upper_right_corner = params['keep_upper_right_corner']
-        except KeyError:
-            pass
-        try:
-            cell.keep_lower_left_corner = params['keep_lower_left_corner']
-        except KeyError:
-            pass
-        try:
-            cell.keep_lower_right_corner = params['keep_lower_right_corner']
-        except KeyError:
-            pass
-        
-        return cell
-    
-    def __upper_border_bold_if_header(self, cell: Cell) -> Cell:
-        if self.headers is not None and self.show_headers:
-            cell.up_right_corner_width = 'bold'
-            cell.up_left_corner_width = 'bold'
-            cell.up_width = 'bold'
-        
-        return cell
-    
-    # (o==================================================================o)
-    #   HEADER ROW CRAFTING SECTION (START)
-    #   upper and middle rows of cells
-    # (o-----------------------------------------------------------\/-----o)
-    
-    def __left_mid_header_cell(self, params: dict) -> Cell:
-        left_cell = Cell()
-        left_cell.show_right_border = False
-        left_cell.show_lower_border = False
-        left_cell = self.__add_cell_params(left_cell, params)
-
-        return left_cell
-    
-    def __penult_header_cell(self, params: dict) -> Cell:
-        penult_cell = Cell()
-        penult_cell.show_lower_border = False
-        penult_cell = self.__add_cell_params(penult_cell, params)
-        
-        return penult_cell
-
-    def __right_header_cell(self, params: dict) -> Cell:
-        right_cell = Cell()
-        right_cell.show_left_border = False
-        right_cell.show_lower_border = False
-        right_cell = self.__add_cell_params(right_cell, params)
-
-        return right_cell
-    
-    # (o-----------------------------------------------------------/\-----o)
-    #   HEADER ROW CRAFTING SECTION (END)
-    # (o==================================================================o)
-    
-
-    # (o==================================================================o)
-    #   UPPER ROW CRAFTING SECTION (START)
-    #   upper and middle rows of cells
-    # (o-----------------------------------------------------------\/-----o)
-    
-    def __left_mid_upper_border_cell(self, params: dict) -> Cell:
-        left_cell = Cell()
-        left_cell.show_right_border = False
-        left_cell.show_lower_border = False
-        left_cell = self.__upper_border_bold_if_header(left_cell)
-        left_cell = self.__add_cell_params(left_cell, params)
-
-        return left_cell
-    
-    def __penult_upper_border_cell(self, params: dict) -> Cell:
-        penult_cell = Cell()
-        penult_cell.show_lower_border = False
-        penult_cell = self.__upper_border_bold_if_header(penult_cell)
-        penult_cell = self.__add_cell_params(penult_cell, params)
-        
-        return penult_cell
-
-    def __right_upper_border_cell(self, params: dict) -> Cell:
-        right_cell = Cell()
-        right_cell.show_left_border = False
-        right_cell.show_lower_border = False
-        right_cell = self.__upper_border_bold_if_header(right_cell)
-        right_cell = self.__add_cell_params(right_cell, params)
-
-        return right_cell
-    
-    # (o-----------------------------------------------------------/\-----o)
-    #   UPPER ROW CRAFTING SECTION (END)
-    # (o==================================================================o)
 
 
-    # (o==================================================================o)
-    #   MIDDLE ROW CRAFTING SECTION (START)
-    #   upper and middle rows of cells
-    # (o-----------------------------------------------------------\/-----o)
     
-    def __left_mid_middle_cell(self, params: dict) -> Cell:
-        left_cell = Cell()
-        left_cell.show_right_border = False
-        left_cell.show_lower_border = False
-        left_cell = self.__add_cell_params(left_cell, params)
 
-        return left_cell
-    
-    def __penult_middle_cell(self, params: dict) -> Cell:
-        penult_cell = Cell()
-        penult_cell.show_lower_border = False
-        penult_cell = self.__add_cell_params(penult_cell, params)
-        
-        return penult_cell
-
-    def __right_middle_cell(self, params: dict) -> Cell:
-        right_cell = Cell()
-        right_cell.show_left_border = False
-        right_cell.show_lower_border = False
-        right_cell = self.__add_cell_params(right_cell, params)
-
-        return right_cell
-    
-    # (o-----------------------------------------------------------/\-----o)
-    #   MIDDLE ROW CRAFTING SECTION (END)
-    # (o==================================================================o)
-    
-    
-    # (o==================================================================o)
-    #   PENULT ROW CRAFTING SECTION (START)
-    #   penult rows of cells
-    # (o-----------------------------------------------------------\/-----o)
-       
-    def __left_mid_double_border_cell(self, params: dict) -> Cell:
-        left_cell = Cell()
-        left_cell.show_right_border = False
-        left_cell = self.__add_cell_params(left_cell, params)
-
-        return left_cell
-    
-    def __penult_double_border_cell(self, params: dict) -> Cell:
-        penult_cell = Cell()
-        penult_cell = self.__add_cell_params(penult_cell, params)
-        
-        return penult_cell
-
-    def __right_double_border_cell(self, params: dict) -> Cell:
-        right_cell = Cell()
-        right_cell.show_left_border = False
-        right_cell = self.__add_cell_params(right_cell, params)
-
-        return right_cell
-    
-    # (o-----------------------------------------------------------/\-----o)
-    #   PENULT ROW CRAFTING SECTION (END)
-    # (o==================================================================o)
-    
-    
-    # (o==================================================================o)
-    #   LOWER ROW CRAFTING SECTION (START)
-    #   lower row of cells
-    # (o-----------------------------------------------------------\/-----o)
-
-    def __left_mid_lower_border_cell(self, params: dict) -> Cell:
-        left_cell = Cell()
-        left_cell.show_right_border = False
-        left_cell.show_upper_border = False
-        left_cell = self.__add_cell_params(left_cell, params)
-
-        return left_cell
-    
-    def __penult_lower_border_cell(self, params: dict) -> Cell:
-        penult_cell = Cell()
-        penult_cell.show_upper_border = False
-        penult_cell = self.__add_cell_params(penult_cell, params)
-        
-        return penult_cell
-
-    def __right_lower_border_cell(self, params: dict) -> Cell:
-        right_cell = Cell()
-        right_cell.show_left_border = False
-        right_cell.show_upper_border = False
-        right_cell = self.__add_cell_params(right_cell, params)
-
-        return right_cell
-    
-    # (o-----------------------------------------------------------/\-----o)
-    #   LOWER ROW CRAFTING SECTION (END)
-    # (o==================================================================o)
-    
-    
-    # (o==================================================================o)
-    #   SPECIAL CELL CASES CRAFTING SECTION (START)
-    #   special cell structures that are needed in unique situations
-    # (o-----------------------------------------------------------\/-----o)
-    
-    # def __empty_header_cell(self, params: dict) -> Cell:
-    #     empty_h_cell = Cell()
-    #     empty_h_cell.show_upper_border = False
-    #     empty_h_cell.show_left_border = False
-    #     empty_h_cell.show_right_border = False
-    #     empty_h_cell = self.__add_cell_params(empty_h_cell, params)
-        
-    #     return empty_h_cell
-    
-    # (o-----------------------------------------------------------/\-----o)
-    #   SPECIAL CELL CASES CRAFTING SECTION (END)
-    # (o==================================================================o)
         
         
     
