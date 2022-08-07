@@ -61,6 +61,7 @@ def upper_border_bold_if_header(cell: Cell) -> Cell:
 #   upper and middle rows of cells
 # (o-----------------------------------------------------------\/-----o)
 
+
 def left_mid_header_cell(params: dict) -> Cell:
     left_cell = Cell()
     left_cell.show_right_border = False
@@ -69,12 +70,14 @@ def left_mid_header_cell(params: dict) -> Cell:
 
     return left_cell
 
+
 def penult_header_cell(params: dict) -> Cell:
     penult_cell = Cell()
     penult_cell.show_lower_border = False
     penult_cell = add_cell_params(penult_cell, params)
     
     return penult_cell
+
 
 def right_header_cell(params: dict) -> Cell:
     right_cell = Cell()
@@ -83,6 +86,7 @@ def right_header_cell(params: dict) -> Cell:
     right_cell = add_cell_params(right_cell, params)
 
     return right_cell
+
 
 # (o-----------------------------------------------------------/\-----o)
 #   HEADER ROW CRAFTING SECTION (END)
@@ -103,6 +107,7 @@ def left_mid_upper_border_cell(params: dict) -> Cell:
 
     return left_cell
 
+
 def penult_upper_border_cell(params: dict) -> Cell:
     penult_cell = Cell()
     penult_cell.show_lower_border = False
@@ -110,6 +115,7 @@ def penult_upper_border_cell(params: dict) -> Cell:
     penult_cell = add_cell_params(penult_cell, params)
     
     return penult_cell
+
 
 def right_upper_border_cell(params: dict) -> Cell:
     right_cell = Cell()
@@ -120,6 +126,7 @@ def right_upper_border_cell(params: dict) -> Cell:
 
     return right_cell
 
+
 # (o-----------------------------------------------------------/\-----o)
 #   UPPER ROW CRAFTING SECTION (END)
 # (o==================================================================o)
@@ -128,7 +135,8 @@ def right_upper_border_cell(params: dict) -> Cell:
 # (o==================================================================o)
 #   MIDDLE ROW CRAFTING SECTION (START)
 #   upper and middle rows of cells
-# (o-----------------------------------------------------------\/-----o)
+# (o-------------
+# ----------------------------------------------\/-----o)
 
 def left_mid_middle_cell(params: dict) -> Cell:
     left_cell = Cell()
@@ -138,12 +146,14 @@ def left_mid_middle_cell(params: dict) -> Cell:
 
     return left_cell
 
+
 def penult_middle_cell(params: dict) -> Cell:
     penult_cell = Cell()
     penult_cell.show_lower_border = False
     penult_cell = add_cell_params(penult_cell, params)
     
     return penult_cell
+
 
 def right_middle_cell(params: dict) -> Cell:
     right_cell = Cell()
@@ -152,6 +162,7 @@ def right_middle_cell(params: dict) -> Cell:
     right_cell = add_cell_params(right_cell, params)
 
     return right_cell
+
 
 # (o-----------------------------------------------------------/\-----o)
 #   MIDDLE ROW CRAFTING SECTION (END)
@@ -163,6 +174,7 @@ def right_middle_cell(params: dict) -> Cell:
 #   penult rows of cells
 # (o-----------------------------------------------------------\/-----o)
     
+    
 def left_mid_double_border_cell(params: dict) -> Cell:
     left_cell = Cell()
     left_cell.show_right_border = False
@@ -170,11 +182,13 @@ def left_mid_double_border_cell(params: dict) -> Cell:
 
     return left_cell
 
+
 def penult_double_border_cell(params: dict) -> Cell:
     penult_cell = Cell()
     penult_cell = add_cell_params(penult_cell, params)
     
     return penult_cell
+
 
 def right_double_border_cell(params: dict) -> Cell:
     right_cell = Cell()
@@ -182,6 +196,7 @@ def right_double_border_cell(params: dict) -> Cell:
     right_cell = add_cell_params(right_cell, params)
 
     return right_cell
+
 
 # (o-----------------------------------------------------------/\-----o)
 #   PENULT ROW CRAFTING SECTION (END)
@@ -193,6 +208,7 @@ def right_double_border_cell(params: dict) -> Cell:
 #   lower row of cells
 # (o-----------------------------------------------------------\/-----o)
 
+
 def left_mid_lower_border_cell(params: dict) -> Cell:
     left_cell = Cell()
     left_cell.show_right_border = False
@@ -201,12 +217,14 @@ def left_mid_lower_border_cell(params: dict) -> Cell:
 
     return left_cell
 
+
 def penult_lower_border_cell(params: dict) -> Cell:
     penult_cell = Cell()
     penult_cell.show_upper_border = False
     penult_cell = add_cell_params(penult_cell, params)
     
     return penult_cell
+
 
 def right_lower_border_cell(params: dict) -> Cell:
     right_cell = Cell()
@@ -215,6 +233,7 @@ def right_lower_border_cell(params: dict) -> Cell:
     right_cell = add_cell_params(right_cell, params)
 
     return right_cell
+
 
 # (o-----------------------------------------------------------/\-----o)
 #   LOWER ROW CRAFTING SECTION (END)
@@ -226,14 +245,15 @@ def right_lower_border_cell(params: dict) -> Cell:
 #   special cell structures that are needed in unique situations
 # (o-----------------------------------------------------------\/-----o)
 
-# def empty_header_cell(params: dict) -> Cell:
-#     empty_h_cell = Cell()
-#     empty_h_cell.show_upper_border = False
-#     empty_h_cell.show_left_border = False
-#     empty_h_cell.show_right_border = False
-#     empty_h_cell = __add_cell_params(empty_h_cell, params)
-    
-#     return empty_h_cell
+
+def empty_cell(params: dict) -> Cell:
+    empty_cell = Cell()
+    empty_cell.show_upper_border = False
+    empty_cell.show_left_border = False
+    empty_cell.show_right_border = False
+    empty_cell.show_lower_border = False
+    empty_cell = add_cell_params(empty_cell, params) 
+
 
 # (o-----------------------------------------------------------/\-----o)
 #   SPECIAL CELL CASES CRAFTING SECTION (END)

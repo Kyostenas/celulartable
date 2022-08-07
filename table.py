@@ -13,25 +13,122 @@ from constants import (
     PENULT,
     LAST,
 )
-
+from micro_classes import (
+    Empty
+)
 
 class CelularTable:
     
     def __init__(self) -> None:
-        self.headers = ['HEADER1', 'HEADER2']
-        self.rows = [
-            ['Primer Nombre', 20, 'Ciudad', 50],
-            ['Nombre Hipotético', 45, 'Ciudad', 10],
-            ['Otro Más', 37, 'Ciudad', 1],
-            ['Último Ya', 24, 'Ciudad', 3],
-        ]
-        self.column_count = 3
-        self.row_count = 4
-        self.show_headers = True
-        self.column_alignments = ['l', 'r', 'c', 'r']
-        self.column_widths = [20, 9, 10, 5]
+        self.headers = []
+        self.rows = []
+        self.column_count = 0
+        self.row_count = 0
+        self.show_headers = False
+        self.column_alignments = []
+        self.column_widths = []
         self.missing_value = DEFAULT_MISSING_VALUE
         self.__rows_config = create_rows_config()
+        
+        
+    # (o==================================================================o)
+    #   CELL ADDING SECTION (START)
+    #   adding and processing of cells
+    # (o-----------------------------------------------------------\/-----o)
+    
+    # (o-----------------------------------------( PUBLIC INTERFACE ))
+    
+    def add_cell(self, 
+                 value = Empty,
+                 row_i: int = None, 
+                 column_i: int = None, 
+                ) -> None:
+        value = self.__validate_value(value)
+        row_i = self.__validate_row_i(row_i)
+        column_i = self.__validate_column_i(row_i, column_i)
+        self.__add_value_to_row(value, row_i, column_i)
+    
+    def add_header_cell(self, 
+                        value = None,
+                        column_i: int = None, 
+                       ) -> None:
+        column_i = self.__validate_header_column_i(column_i)
+        self.headers.insert(column_i, value)
+        
+    def add_row(self,
+                data: list,
+                row_i: int = None,
+               ) -> None:
+        for piece in data:
+            self.add_cell(
+                value=piece, 
+                row_i=row_i
+            )
+            
+    def add_headers(self, headers: list) -> None:
+        for header in headers:
+            self.add_header_cell(header)
+        
+    # (o-----------------------------------------( PRIVATE ))
+    
+    def __validate_value(self, value):
+        if value is Empty:
+            value = self.missing_value
+        return value
+      
+    def __add_value_to_row(self,
+                           value,
+                           row_i: int,
+                           column_i: int,
+                          ) -> None:
+        try:
+            self.rows[row_i].insert(column_i, value)
+        except IndexError:
+            self.rows.append([])
+            self.add_cell(
+                value,
+                row_i, 
+                column_i, 
+            )
+    
+    def __validate_row_i(self, row_i: int) -> int:
+        if row_i is None:
+            row_i = self.rows.__len__()
+        if row_i + 1 > self.row_count:
+            self.row_count = row_i + 1
+        return row_i
+            
+    def __validate_column_i(self, row_i: int, column_i: int) -> int:
+        if column_i is None:
+            try:
+                column_i = self.rows[row_i].__len__()
+            except IndexError:
+                column_i = 0
+        if column_i + 1 > self.column_count:
+            self.column_count = column_i + 1
+        return column_i
+    
+    def __validate_header_column_i(self, column_i) -> int:
+        if column_i is None:
+            column_i = self.headers.__len__()
+        if column_i + 1 > self.column_count:
+            self.column_count = column_i + 1
+        return column_i
+    
+    def __find_types(self):
+        pass
+    
+    def __find_column_alignments(self):
+        pass
+    
+    def __find_column_widths(self):
+        pass
+    
+    
+     
+    # (o-----------------------------------------------------------/\-----o)
+    #   CELL ADDING SECTION (END)
+    # (o==================================================================o)
 
     
     # (o==================================================================o)
@@ -57,14 +154,12 @@ class CelularTable:
         print('\n'.join(headers))
         print('\n'.join(all_rows))
         
-    def add_row(): pass
-    def add_column(): pass
 
+    
     # (o-----------------------------------------( PRIVATE ))
     
     def __create_all_rows(self, alignment, cols_widths):
         rows = []
-        
         
         # UPPER ROW
         try:
