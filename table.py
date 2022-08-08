@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, Dict, List, Union
 
 from cell import Cell
 from cell_rows import create_rows_config
@@ -31,6 +31,94 @@ class CelularTable:
         self.__rows_config = create_rows_config()
         
         
+    # (o==================================================================o)
+    #   COLUMN GETTING SECTION (START)
+    #   to get specific columns, or all of them
+    # (o-----------------------------------------------------------\/-----o)
+
+    # (o-----------------------------------------( PUBLIC INTERFACE ))
+    
+    def get_column(self, index: Union[int, Any]) -> Dict[Any, list]:
+        header = self.__validate_header_with_number(index)
+        column_body = self.__validate_col_with_number(index)
+        if header is None and column_body is None:
+            header = self.__validate_header_with_value(value=index)             
+            column_body = self.__validate_col_with_value(value=index)
+        
+        return {header: column_body}
+    
+    def get_columns(self, range_to_get: range=None):
+        columns = []
+        range_to_get = self.__validate_range_for_cols(range_to_get)
+        for index in range_to_get:
+            columns.append(self.get_column(index))
+
+        return columns
+
+    # (o-----------------------------------------( PRIVATE ))
+    
+    def __validate_range_for_cols(self, range_to_check: range):
+        if range_to_check is None or range_to_check is not range:
+            return range(0, self.column_count)
+        return range_to_check
+    
+    def __validate_header_with_value(self, value: Any):
+        header = None
+        try:
+            self.headers.index(value)
+            header = value
+        except ValueError:
+            pass
+        
+        return header
+    
+    def __validate_col_with_value(self, value: Any):
+        column_body = None
+        try:
+            col_index = self.headers.index(value)
+            column_body = list(map(
+                lambda row: self.__get_cell(row, col_index), 
+                self.rows
+            ))
+        except ValueError:
+            pass
+        
+        return column_body
+    
+    def __validate_header_with_number(self, index: int):
+        header = None
+        try:
+            header = self.headers[index]
+        except TypeError:
+            pass
+        except IndexError:
+            header = index
+        
+        return header
+    
+    def __validate_col_with_number(self, index: int):
+        column_body = None
+        try:
+            column_body = list(map(
+                lambda row: self.__get_cell(row, index), 
+                self.rows
+            ))
+        except (TypeError, IndexError):
+            pass
+        
+        return column_body         
+    
+    def __get_cell(self, row: list, index: int) -> list:
+        try:
+            return row[index]
+        except IndexError:
+            return self.missing_value
+    
+    # (o-----------------------------------------------------------/\-----o)
+    #   COLUMN GETTING SECTION (END)
+    # (o==================================================================o)
+
+    
     # (o==================================================================o)
     #   CELL ADDING SECTION (START)
     #   adding and processing of cells
