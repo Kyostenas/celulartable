@@ -38,14 +38,14 @@ class CelularTable:
 
     # (o-----------------------------------------( PUBLIC INTERFACE ))
     
-    def get_column(self, index: Union[int, Any]) -> Dict[Any, list]:
+    def get_column(self, index: Union[int, Any]) -> tuple:
         header = self.__validate_header_with_number(index)
         column_body = self.__validate_col_with_number(index)
         if header is None and column_body is None:
             header = self.__validate_header_with_value(value=index)             
             column_body = self.__validate_col_with_value(value=index)
         
-        return {header: column_body}
+        return (header, column_body)
     
     def get_columns(self, range_to_get: range=None):
         columns = []
@@ -201,21 +201,51 @@ class CelularTable:
             column_i = self.headers.__len__()
         if column_i + 1 > self.column_count:
             self.column_count = column_i + 1
-        return column_i
+        return column_i 
+     
+    # (o-----------------------------------------------------------/\-----o)
+    #   CELL ADDING SECTION (END)
+    # (o==================================================================o)
     
-    def __find_types(self):
+    
+    # (o==================================================================o)
+    #   DATA FORMATTING SECTION (START)
+    #   width finding, type formatting & alignments
+    # (o-----------------------------------------------------------\/-----o)
+    
+       
+    def find_types(self):
         pass
     
     def __find_column_alignments(self):
         pass
     
-    def __find_column_widths(self):
-        pass
+    def find_column_widths(self) -> List[int]:
+        widths = []
+        columns = self.get_columns()
+        for column in columns:
+            header, data = column
+            header_width = self.__get_piece_width(header)
+            col_width = max(list(map(
+                self.__get_piece_width,
+                data
+            )))
+            max_width = max([header_width, col_width])
+            widths.append(max_width)
+            
+        self.column_widths = widths
+        
+        return widths
+            
+    @staticmethod
+    def __get_piece_width(piece: str) -> int:
+        try:
+            return piece.__len__()    
+        except AttributeError:
+            return str(piece).__len__()
     
-    
-     
     # (o-----------------------------------------------------------/\-----o)
-    #   CELL ADDING SECTION (END)
+    #   DATA FORMATTING SECTION (END)
     # (o==================================================================o)
 
     
@@ -227,6 +257,7 @@ class CelularTable:
     # (o-----------------------------------------( PUBLIC INTERFACE ))
     
     def craft(self):
+        self.find_column_widths()
         all_rows = self.__create_all_rows(
             alignment=self.column_alignments,
             cols_widths=self.column_widths
@@ -409,17 +440,22 @@ class CelularTable:
 
         return joined_cell_parts
     
-    @staticmethod
-    def __get_groups_of_parameters(parameters: dict) -> List[dict]:
+    def __get_groups_of_parameters(self, parameters: dict) -> List[dict]:
         keys = list(parameters.keys())
         values = list(parameters.values())
-        column_quantity = parameters['value'].__len__()
+        column_quantity = self.column_count
         
         param_groups = []
         [param_groups.append({}) for _ in range(column_quantity)]
         for key_i, key in enumerate(keys):
             for column_i in range(column_quantity):
-                param_groups[column_i][key] = values[key_i][column_i]
+                try:
+                    param_groups[column_i][key] = values[key_i][column_i]
+                except IndexError:
+                    print(param_groups, column_i, key)
+                    print(values, key_i, column_i)
+                    exit()
+                
                         
         return param_groups
         

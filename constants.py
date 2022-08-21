@@ -1,3 +1,26 @@
+from typing import NamedTuple
+from micro_classes import (
+    Empty
+)
+
+
+class TypeNames(NamedTuple):
+    bool_: str
+    str_: str
+    int_: str
+    float_: str
+    bytes_: str
+    none_type_: str
+    empty: str
+
+
+class ColumnAligns(NamedTuple):
+    left: str
+    right: str
+    center: str
+    float_: str
+    bytes_: str
+
 
 # (o==================================================================o)
 #   CELL SECTION (START)
@@ -22,12 +45,19 @@ LEFT_ALIGNED = '<'
 TO_RIGHT_ALIGN = ['r', 'f']
 TO_CENTER = ['c']
 
+COLUMN_ALIGNS = ColumnAligns(
+    left='l',
+    right='r',
+    center='c',
+    float_='f',
+    bytes_='b',
+)
 ALIGNMENTS = {
-    'l' : 'left',
-    'r' : 'right',
-    'c' : 'center',
-    'f' : 'float',
-    'b' : 'bytes',
+    COLUMN_ALIGNS.left : 'left',
+    COLUMN_ALIGNS.right : 'right',
+    COLUMN_ALIGNS.center : 'center',
+    COLUMN_ALIGNS.float_ : 'float',
+    COLUMN_ALIGNS.bytes_ : 'bytes',
 }
 
 # (o-----------------------------------------------------------/\-----o)
@@ -53,6 +83,28 @@ AT_LEAST_FOUR = 3
 SECOND_TO_ANTE_PENULT = slice(1, -2)
 
 DEFAULT_MISSING_VALUE = ''
+
+TYPE_NAMES = TypeNames(
+    bool_=bool.__name__,
+    str_=str.__name__,
+    int_=int.__name__,
+    float_=float.__name__,
+    bytes_=bytes.__name__,
+    none_type_=type(None).__name__,
+    empty=Empty.__name__,
+)
+ALIGNMENTS_PER_TYPE = {
+    TYPE_NAMES.bool_: COLUMN_ALIGNS.right,
+    TYPE_NAMES.str_: COLUMN_ALIGNS.left,
+    TYPE_NAMES.int_: COLUMN_ALIGNS.right,
+    TYPE_NAMES.float_: COLUMN_ALIGNS.float_,
+    TYPE_NAMES.bytes_: COLUMN_ALIGNS.bytes_,
+    TYPE_NAMES.none_type_: COLUMN_ALIGNS.left,
+}
+CAN_WRAP_TYPES = [
+    TYPE_NAMES.str_,
+    TYPE_NAMES.none_type_,
+]
 
 # (o-----------------------------------------------------------/\-----o)
 #   CELULARTABLE SECTION (END)
