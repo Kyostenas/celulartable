@@ -17,24 +17,41 @@ def try_regex(regex_string, value):
     except (TypeError, AttributeError):
         pass
     try:
-        value_ = str(value)
-        match = searcher.match(str(value_).strip())
+        string_converted_value = str(value)
+        match = searcher.match(string_converted_value.strip())
         match_width = match.end() - match.start()
-        full_match = str(value_).strip().__len__() == match_width
+        full_match = string_converted_value.strip().__len__() == match_width
     except AttributeError:
         full_match = False
         
     return full_match
 
 
+def is_none(value):
+    return try_regex(
+        r"""
+            ^
+            [ ]*        # Any space before.
+            (\bNone\b)  # Exact word "None".
+            [ ]*        # Any space after.
+            $
+         """,
+         value
+    )
+
+
 def is_bool(value):
     return try_regex(
-        r"""            # === CASE 1 ===
-            [ ]*        # Any space before.
-            \bTrue\b    # Exact word "True".
-            |           # === CASE 2 ===
-            [ ]*        # Any space before.
-            \bFalse\b   # Exact word "False".
+        r"""
+            ^
+            [ ]             # Any space before.
+            *(
+                \bTrue\b    # |
+                |           # |-+ "True" or "False"
+                \bFalse\b   # |
+            )
+            [ ]             # Any space after.
+            *$
          """, 
         value
     )
@@ -92,4 +109,3 @@ def is_exponential(value):
          value
     )
 
-    
