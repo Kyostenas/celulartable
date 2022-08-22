@@ -452,9 +452,7 @@ class CelularTable:
                 try:
                     param_groups[column_i][key] = values[key_i][column_i]
                 except IndexError:
-                    print(param_groups, column_i, key)
-                    print(values, key_i, column_i)
-                    exit()
+                    pass
                 
                         
         return param_groups
