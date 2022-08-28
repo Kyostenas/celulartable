@@ -1,8 +1,8 @@
 from typing import Any, Dict, List, Union
 
-from cell import Cell
-from cell_rows import create_rows_config
-from constants import (
+from cell.cell import Cell
+from cell.cell_rows import create_rows_config
+from utils.constants import (
     AT_LEAST_THREE,
     DEFAULT_MISSING_VALUE,
     SECOND_TO_ANTE_PENULT,
@@ -13,7 +13,7 @@ from constants import (
     PENULT,
     LAST,
 )
-from micro_classes import (
+from utils.micro_classes import (
     Empty
 )
 
