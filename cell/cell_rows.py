@@ -1,5 +1,5 @@
-from cell import Cell
-from constants import (
+from cell.cell import Cell
+from utils.constants import (
     PENULT_CELL_ROW_HEIGHT, 
     UPPER_LOWER_CELL_ROW_HEIGHT
 )
