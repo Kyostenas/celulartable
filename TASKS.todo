@@ -79,7 +79,7 @@
                       "content": "For each cell",
                       "id": 1661723769970,
                       "level": "warning",
-                      "done": false
+                      "done": true
                     }
                   },
                   {
@@ -89,7 +89,7 @@
                       "content": "For each column",
                       "id": 1661723774722,
                       "level": "warning",
-                      "done": false
+                      "done": true
                     }
                   }
                 ],
@@ -97,7 +97,7 @@
                   "content": "Implement type parsing",
                   "id": 1661723738033,
                   "level": "warning",
-                  "done": false
+                  "done": true
                 }
               },
               {

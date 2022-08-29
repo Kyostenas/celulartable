@@ -2,7 +2,8 @@ from typing import Any, Dict, List, Tuple, Union
 
 from cell.cell import Cell
 from cell.cell_rows import create_rows_config
-from type_checking.parsing import get_column_type_name, try_evey_type
+from type_checking.cell_parsing import try_evey_type
+from type_checking.column_parsing import get_column_type_name
 from utils.constants import (
     AT_LEAST_THREE,
     DEFAULT_MISSING_VALUE,
@@ -270,8 +271,7 @@ class CelularTable:
             self.__parse_one_column, 
             columns_to_parse.items()
         ))
-        print(self.cell_types)
-        print(self.column_types)
+        return self.column_types
         
     def find_column_alignments(self):
         pass

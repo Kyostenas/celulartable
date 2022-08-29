@@ -16,15 +16,6 @@ from utils.constants import (
 )
 
 
-# Type hierarchy for this package
-#   None
-#   bool
-#   int
-#   float | exponential
-#   str
-#   (Any other)
-
-
 __fast_check = { True: None }
 __is_empty = {Empty: None}
 
@@ -67,39 +58,6 @@ def __use_parse_group(parse_group: Tuple[str, 'function'],
         return TYPE_NAMES.no_match  # If result is False
     
 
-def get_column_type_name(column: List[str]) -> str:
-    is_none = TYPE_NAMES.none_type_ in column
-    is_bool = TYPE_NAMES.bool_ in column
-    is_int = TYPE_NAMES.int_ in column
-    is_float = TYPE_NAMES.float_ in column
-    is_exponential = TYPE_NAMES.exponential in column
-    
-    try:
-        __fast_check[is_none]
-        return TYPE_NAMES.none_type_
-    except KeyError:
-        pass
-    try:
-        __fast_check[is_bool]
-        return TYPE_NAMES.bool_
-    except KeyError:
-        pass
-    try:
-        __fast_check[is_int]
-        return TYPE_NAMES.int_
-    except KeyError:
-        pass
-    try:
-        __fast_check[is_float]
-        return TYPE_NAMES.float_
-    except KeyError:
-        pass
-    try:
-        __fast_check[is_exponential]
-        return TYPE_NAMES.exponential
-    except KeyError:
-        pass
-    
-    return TYPE_NAMES.str_
+
     
     

@@ -1,4 +1,4 @@
-from typing import NamedTuple
+from typing import List, NamedTuple
 from utils.micro_classes import (
     Empty,
     NoMatch
@@ -23,6 +23,13 @@ class ColumnAligns(NamedTuple):
     center: str
     float_: str
     bytes_: str
+    
+    
+class AdmittedTypesForColumn(NamedTuple):
+    none_: List[str]
+    bool_: List[str]
+    int_: List[str]
+    float_: List[str]
 
 
 # (o==================================================================o)
@@ -98,6 +105,27 @@ TYPE_NAMES = TypeNames(
     empty=Empty.__name__,
     no_match=NoMatch.__name__,
 )
+COLUMN_TYPES = AdmittedTypesForColumn(
+    none_=[
+        TYPE_NAMES.none_type_,
+        TYPE_NAMES.empty,
+    ],
+    bool_=[
+        TYPE_NAMES.bool_,
+        TYPE_NAMES.empty,
+    ],
+    int_=[
+        TYPE_NAMES.int_,
+        TYPE_NAMES.bool_,
+        TYPE_NAMES.empty,
+    ],
+    float_=[
+        TYPE_NAMES.int_,
+        TYPE_NAMES.float_,
+        TYPE_NAMES.exponential,
+        TYPE_NAMES.empty,
+    ]
+)
 ALIGNMENTS_PER_TYPE = {
     TYPE_NAMES.bool_: COLUMN_ALIGNS.right,
     TYPE_NAMES.str_: COLUMN_ALIGNS.left,
@@ -110,6 +138,7 @@ CAN_WRAP_TYPES = [
     TYPE_NAMES.str_,
     TYPE_NAMES.none_type_,
 ]
+
 
 HEADER_I = 0
 CONTENT_I = 1
