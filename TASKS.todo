@@ -107,7 +107,7 @@
                   "content": "Implement column alignment parsing",
                   "id": 1661723783610,
                   "level": "warning",
-                  "done": false
+                  "done": true
                 }
               }
             ],
@@ -120,7 +120,18 @@
           },
           {
             "key": 1661724339935,
-            "children": [],
+            "children": [
+              {
+                "key": 1661758677935,
+                "children": [],
+                "todo": {
+                  "content": "Add float alignment in Cell",
+                  "id": 1661758677935,
+                  "level": "default",
+                  "done": false
+                }
+              }
+            ],
             "todo": {
               "content": "Add column alignment",
               "id": 1661724339935,
@@ -197,7 +208,8 @@
       1661723593626,
       1661723594979,
       1661723201922,
-      1661723738033
+      1661723738033,
+      1661724339935
     ],
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",

@@ -5,6 +5,7 @@ from cell.cell_rows import create_rows_config
 from type_checking.cell_parsing import try_evey_type
 from type_checking.column_parsing import get_column_type_name
 from utils.constants import (
+    ALIGNMENTS_PER_TYPE,
     AT_LEAST_THREE,
     DEFAULT_MISSING_VALUE,
     SECOND_TO_ANTE_PENULT,
@@ -274,7 +275,12 @@ class CelularTable:
         return self.column_types
         
     def find_column_alignments(self):
-        pass
+        alignments = list(map(
+            lambda type_: ALIGNMENTS_PER_TYPE[type_],
+            self.column_types
+        ))
+        self.column_alignments = alignments
+        return alignments
     
     def find_column_widths(self) -> List[int]:
         widths = []
@@ -326,7 +332,7 @@ class CelularTable:
     
     def craft(self):
         self.find_types()
-        exit()
+        self.find_column_alignments()
         self.find_column_widths()
         all_rows = self.__create_all_rows(
             alignment=self.column_alignments,
