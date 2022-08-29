@@ -78,7 +78,7 @@
                     "todo": {
                       "content": "For each cell",
                       "id": 1661723769970,
-                      "level": "default",
+                      "level": "warning",
                       "done": false
                     }
                   },
@@ -88,7 +88,7 @@
                     "todo": {
                       "content": "For each column",
                       "id": 1661723774722,
-                      "level": "default",
+                      "level": "warning",
                       "done": false
                     }
                   }
@@ -96,7 +96,7 @@
                 "todo": {
                   "content": "Implement type parsing",
                   "id": 1661723738033,
-                  "level": "default",
+                  "level": "warning",
                   "done": false
                 }
               },
@@ -106,7 +106,7 @@
                 "todo": {
                   "content": "Implement column alignment parsing",
                   "id": 1661723783610,
-                  "level": "default",
+                  "level": "warning",
                   "done": false
                 }
               }
@@ -114,7 +114,17 @@
             "todo": {
               "content": "Add type parsing",
               "id": 1661723201922,
-              "level": "default",
+              "level": "danger",
+              "done": false
+            }
+          },
+          {
+            "key": 1661724339935,
+            "children": [],
+            "todo": {
+              "content": "Add column alignment",
+              "id": 1661724339935,
+              "level": "danger",
               "done": false
             }
           },
@@ -124,7 +134,7 @@
             "todo": {
               "content": "Add setup.py",
               "id": 1661723270244,
-              "level": "default",
+              "level": "warning",
               "done": false
             }
           },
@@ -135,6 +145,37 @@
               "content": "Add npm versioning",
               "id": 1661723294270,
               "level": "default",
+              "done": false
+            }
+          },
+          {
+            "key": 1661724383529,
+            "children": [
+              {
+                "key": 1661724398429,
+                "children": [],
+                "todo": {
+                  "content": "Add correct structure to the package",
+                  "id": 1661724398429,
+                  "level": "default",
+                  "done": false
+                }
+              },
+              {
+                "key": 1661724423462,
+                "children": [],
+                "todo": {
+                  "content": "Correct imports to work as intended in a package",
+                  "id": 1661724423462,
+                  "level": "default",
+                  "done": false
+                }
+              }
+            ],
+            "todo": {
+              "content": "Publish as python package",
+              "id": 1661724383529,
+              "level": "success",
               "done": false
             }
           }
@@ -152,10 +193,11 @@
       1661715450862,
       1661715463591,
       1661715673899,
-      1661723201922,
       1661723590179,
       1661723593626,
-      1661723594979
+      1661723594979,
+      1661723201922,
+      1661723738033
     ],
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",
