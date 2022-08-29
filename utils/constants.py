@@ -1,6 +1,7 @@
 from typing import NamedTuple
 from utils.micro_classes import (
-    Empty
+    Empty,
+    NoMatch
 )
 
 
@@ -9,9 +10,11 @@ class TypeNames(NamedTuple):
     str_: str
     int_: str
     float_: str
+    exponential: str
     bytes_: str
     none_type_: str
     empty: str
+    no_match: str
 
 
 class ColumnAligns(NamedTuple):
@@ -89,9 +92,11 @@ TYPE_NAMES = TypeNames(
     str_=str.__name__,
     int_=int.__name__,
     float_=float.__name__,
+    exponential='exponential',
     bytes_=bytes.__name__,
     none_type_=type(None).__name__,
     empty=Empty.__name__,
+    no_match=NoMatch.__name__,
 )
 ALIGNMENTS_PER_TYPE = {
     TYPE_NAMES.bool_: COLUMN_ALIGNS.right,
@@ -105,6 +110,11 @@ CAN_WRAP_TYPES = [
     TYPE_NAMES.str_,
     TYPE_NAMES.none_type_,
 ]
+
+HEADER_I = 0
+CONTENT_I = 1
+TYPE_NAME_I = 0
+TYPE_PARSER_I = 1
 
 # (o-----------------------------------------------------------/\-----o)
 #   CELULARTABLE SECTION (END)

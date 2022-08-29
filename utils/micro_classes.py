@@ -1,2 +1,7 @@
 class Empty:
-    pass
+    def __init__(self):
+        self.empty = ...
+        
+
+class NoMatch:
+    ...

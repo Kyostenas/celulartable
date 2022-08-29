@@ -1,7 +1,8 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Tuple, Union
 
 from cell.cell import Cell
 from cell.cell_rows import create_rows_config
+from type_checking.parsing import get_column_type_name, try_evey_type
 from utils.constants import (
     AT_LEAST_THREE,
     DEFAULT_MISSING_VALUE,
@@ -12,10 +13,15 @@ from utils.constants import (
     FIRST,
     PENULT,
     LAST,
+    HEADER_I,
+    CONTENT_I
 )
 from utils.micro_classes import (
     Empty
 )
+# from type_checking. import {
+    
+# }
 
 class CelularTable:
     
@@ -25,6 +31,8 @@ class CelularTable:
         self.column_count = 0
         self.row_count = 0
         self.show_headers = False
+        self.cell_types = {}
+        self.column_types = []
         self.column_alignments = []
         self.column_widths = []
         self.missing_value = DEFAULT_MISSING_VALUE
@@ -38,20 +46,59 @@ class CelularTable:
 
     # (o-----------------------------------------( PUBLIC INTERFACE ))
     
-    def get_column(self, index: Union[int, Any]) -> tuple:
+    def get_column(self, 
+                   index: Union[int, Any],
+                   missing_vals: bool=True
+                  ) -> dict:
+        """
+        ## Get column
+        
+        Returns a dict with the following structure::
+        
+            {'header': Any, 'content': [Any]}
+            
+        If there's columns with no header, its index
+        takes place of the said one.
+            
+        ### Params::
+        
+            index: int | Any        # Specify index or header of column.
+            missing_vals: bool      # False: Uses "Empty" class.
+                                    # True: Uses self.missing_value
+        """
         header = self.__validate_header_with_number(index)
-        column_body = self.__validate_col_with_number(index)
+        column_body = self.__validate_col_with_number(
+            index,
+            missing_vals,
+        )
         if header is None and column_body is None:
             header = self.__validate_header_with_value(value=index)             
             column_body = self.__validate_col_with_value(value=index)
         
-        return (header, column_body)
+        return {'header': header, 'content': column_body}
     
-    def get_columns(self, range_to_get: range=None):
-        columns = []
+    def get_columns(self, 
+                    range_to_get: range=None, 
+                    missing_vals: bool=True
+                   ) -> dict:
+        """
+        ## Get columns
+        
+        Returns a dict with the following structure::
+        
+            {Any: [Any], ...}
+            
+        ### Params::
+        
+            range_to_get: range     # Specify range of columns
+            missing_vals: bool      # False: Uses "Empty" class.
+                                    # True: Uses self.missing_value
+        """
+        columns = {}
         range_to_get = self.__validate_range_for_cols(range_to_get)
         for index in range_to_get:
-            columns.append(self.get_column(index))
+            column = self.get_column(index, missing_vals)
+            columns[column['header']] = column['content']
 
         return columns
 
@@ -72,12 +119,12 @@ class CelularTable:
         
         return header
     
-    def __validate_col_with_value(self, value: Any):
+    def __validate_col_with_value(self, value: Any, missing_vals: bool):
         column_body = None
         try:
             col_index = self.headers.index(value)
             column_body = list(map(
-                lambda row: self.__get_cell(row, col_index), 
+                lambda row: self.__get_cell(row, col_index, missing_vals), 
                 self.rows
             ))
         except ValueError:
@@ -96,11 +143,11 @@ class CelularTable:
         
         return header
     
-    def __validate_col_with_number(self, index: int):
+    def __validate_col_with_number(self, index: int, missing_vals: bool):
         column_body = None
         try:
             column_body = list(map(
-                lambda row: self.__get_cell(row, index), 
+                lambda row: self.__get_cell(row, index, missing_vals), 
                 self.rows
             ))
         except (TypeError, IndexError):
@@ -108,11 +155,14 @@ class CelularTable:
         
         return column_body         
     
-    def __get_cell(self, row: list, index: int) -> list:
+    def __get_cell(self, row: list, index: int, missing_vals: bool) -> list:
         try:
             return row[index]
         except IndexError:
-            return self.missing_value
+            if missing_vals:
+                return self.missing_value
+            else:
+                return Empty
     
     # (o-----------------------------------------------------------/\-----o)
     #   COLUMN GETTING SECTION (END)
@@ -215,16 +265,21 @@ class CelularTable:
     
        
     def find_types(self):
-        pass
-    
-    def __find_column_alignments(self):
+        columns_to_parse = self.get_columns(missing_vals=False)
+        list(map(
+            self.__parse_one_column, 
+            columns_to_parse.items()
+        ))
+        print(self.cell_types)
+        print(self.column_types)
+        
+    def find_column_alignments(self):
         pass
     
     def find_column_widths(self) -> List[int]:
         widths = []
         columns = self.get_columns()
-        for column in columns:
-            header, data = column
+        for header, data in columns.items():
             header_width = self.__get_piece_width(header)
             col_width = max(list(map(
                 self.__get_piece_width,
@@ -236,6 +291,19 @@ class CelularTable:
         self.column_widths = widths
         
         return widths
+    
+    def __parse_one_column(self, column: Tuple[str, list]):
+        column_content = column[CONTENT_I]
+        column_name = column[HEADER_I]
+        parsed_column = list(map(try_evey_type, column_content))
+        column_type = get_column_type_name(parsed_column)
+        self.cell_types[column_name] = parsed_column
+        self.column_types.append(column_type)
+        return {
+            'header': column_name,
+            'cell_types': parsed_column,
+            'column_type': column_type,
+        }
             
     @staticmethod
     def __get_piece_width(piece: str) -> int:
@@ -257,6 +325,8 @@ class CelularTable:
     # (o-----------------------------------------( PUBLIC INTERFACE ))
     
     def craft(self):
+        self.find_types()
+        exit()
         self.find_column_widths()
         all_rows = self.__create_all_rows(
             alignment=self.column_alignments,

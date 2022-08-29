@@ -1,5 +1,6 @@
 import re
 
+
 # Type hierarchy for this package
 #   None
 #   bool
@@ -8,7 +9,8 @@ import re
 #   str
 #   (Any other)
 
-def try_regex(regex_string, value):
+
+def __try_regex(regex_string, value):
     searcher = re.compile(regex_string, re.VERBOSE)
     try:
         match = searcher.match(value.strip())
@@ -28,7 +30,7 @@ def try_regex(regex_string, value):
 
 
 def is_none(value):
-    return try_regex(
+    return __try_regex(
         r"""
             ^
             [ ]*        # Any space before.
@@ -41,24 +43,24 @@ def is_none(value):
 
 
 def is_bool(value):
-    return try_regex(
+    return __try_regex(
         r"""
             ^
-            [ ]             # Any space before.
-            *(
+            [ ]*            # Any space before.
+            (
                 \bTrue\b    # |
                 |           # |-+ "True" or "False"
                 \bFalse\b   # |
             )
-            [ ]             # Any space after.
-            *$
+            [ ]*            # Any space after.
+            $
          """, 
         value
     )
 
 
 def is_int(value):
-    return try_regex(
+    return __try_regex(
         r"""
             ^
             [-]?                # Optional negative sign.
@@ -70,7 +72,7 @@ def is_int(value):
 
         
 def is_float(value):
-    return try_regex(
+    return __try_regex(
         r"""
             ^
             [ ]*                    # Any space before.
@@ -86,7 +88,7 @@ def is_float(value):
 
 
 def is_exponential(value):
-    return try_regex(
+    return __try_regex(
         r"""
             ^                               
             [ ]*                            # Any space before.
@@ -108,4 +110,3 @@ def is_exponential(value):
          """,
          value
     )
-
