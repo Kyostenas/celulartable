@@ -1,0 +1,14 @@
+Version 0.0.0:
+    Type parsing:
+        ✔ FEAT: Add a regex for each type @done(22-09-04 15:37)
+        ✔ Implement type parsing for each cell. @done(22-09-04 15:37)
+        ✔ Implement type parsing for each column. @done(22-09-04 15:37)
+        ✔ Implement column alignment parsing. @done(22-09-04 15:37)
+    Publish as package:
+        ☐ CHORE: Add setup.py @high
+        ☐ CHORE: Structure the package. @high
+        ☐ CHORE: Change imports to correct form. @high
+    ☐ FIX: Larger rows show no under border. @high
+Version 0.1.0:
+    ☐ FEAT: Add float alignment in Cell. @low
+    ☐ FEAT: Implement border manipulation. @low
