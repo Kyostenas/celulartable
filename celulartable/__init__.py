@@ -1,4 +1,4 @@
-from .table import Table
+from .table import CelularTable
 from .cell.cell import Cell
 from .utils.micro_classes import VoidCell
 from .cell.cell_styles import style_names, Style
@@ -19,7 +19,7 @@ from .utils.constants import (
 )
 
 __all__ = [
-    Table,
+    CelularTable,
     Cell,
     VoidCell,
     Style,
