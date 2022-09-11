@@ -9,7 +9,7 @@ from .type_parsers import (
     is_float,
     is_exponential,
 )
-from utils.constants import (
+from ..utils.constants import (
     TYPE_NAMES,
     TYPE_NAME_I,
     TYPE_PARSER_I,
