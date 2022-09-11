@@ -9,8 +9,8 @@ Version 0.0.0:
         ☐ CHORE: Structure the package. @high
         ☐ CHORE: Change imports to correct form. @high
     ✔ FIX: Bug on repeated header. @critical @started(22-09-11 13:17) @done(22-09-11 14:36) @lasted(1h19m3s)
-    ☐ FEAT: Add possibility of no header. @high @started(22-09-11 15:11)
-    ☐ FIX: Missing value not showing. @high
+    ✔ FEAT: Add possibility of no header. @high @started(22-09-11 15:11) @done(22-09-11 15:50) @lasted(39m29s)
+    ✔ FIX: Missing value not showing. @high @done(22-09-11 15:51)
 Version 0.1.0:
     ☐ FEAT: Add support for empty cells. @low
     ☐ FEAT: Add float alignment in Cell. @low

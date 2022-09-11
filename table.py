@@ -574,7 +574,8 @@ class CelularTable:
                 try:
                     param_groups[column_i][key] = values[key_i][column_i]
                 except IndexError:
-                    pass
+                    if row_type != HEADER_ROW:
+                        param_groups[column_i]['value'] = self.missing_value
                 
         return param_groups
         
