@@ -8,7 +8,11 @@ Version 0.0.0:
         ☐ CHORE: Add setup.py @high
         ☐ CHORE: Structure the package. @high
         ☐ CHORE: Change imports to correct form. @high
-    ☐ FIX: Larger rows show no under border. @high
+    ✔ FIX: Bug on repeated header. @critical @started(22-09-11 13:17) @done(22-09-11 14:36) @lasted(1h19m3s)
+    ☐ FEAT: Add possibility of no header. @high @started(22-09-11 15:11)
+    ☐ FIX: Missing value not showing. @high
 Version 0.1.0:
+    ☐ FEAT: Add support for empty cells. @low
     ☐ FEAT: Add float alignment in Cell. @low
     ☐ FEAT: Implement border manipulation. @low
+    ☐ FEAT: Add alignment indicator. @low

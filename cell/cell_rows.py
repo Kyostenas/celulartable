@@ -1,43 +1,60 @@
 from cell.cell import Cell
 from utils.constants import (
-    PENULT_CELL_ROW_HEIGHT, 
-    UPPER_LOWER_CELL_ROW_HEIGHT
+    EMPTY,
+    PENULT_CELL_ROW_HEIGHT,
+    ROW_TYPE, 
+    UPPER_LOWER_CELL_ROW_HEIGHT,
+    HEADER_ROW,
+    UPPER_ROW,
+    MIDDLE_ROW,
+    PENULT_ROW,
+    LOWER_ROW,
+    LEFT_CELL,
+    PENULT_CELL,
+    RIGHT_CELL,
+    ROW_HEIGHT,
 )
 
 
 def create_rows_config() -> dict:
-    return  {
-        'header': {
-            'left_cell': left_mid_header_cell,
-            'penult_cell': penult_header_cell,
-            'right_cell': right_header_cell,
-            'row_height':UPPER_LOWER_CELL_ROW_HEIGHT,
+    rows_config =  {
+        HEADER_ROW: {
+            LEFT_CELL: left_mid_header_cell,
+            PENULT_CELL: penult_header_cell,
+            RIGHT_CELL: right_header_cell,
+            ROW_HEIGHT: UPPER_LOWER_CELL_ROW_HEIGHT,
+            ROW_TYPE: HEADER_ROW
         },
-        'upper': {
-            'left_cell': left_mid_upper_border_cell,
-            'penult_cell': penult_upper_border_cell,
-            'right_cell': right_upper_border_cell,
-            'row_height': UPPER_LOWER_CELL_ROW_HEIGHT,
+        UPPER_ROW: {
+            LEFT_CELL: left_mid_upper_border_cell,
+            PENULT_CELL: penult_upper_border_cell,
+            RIGHT_CELL: right_upper_border_cell,
+            ROW_HEIGHT: UPPER_LOWER_CELL_ROW_HEIGHT,
+            ROW_TYPE: UPPER_ROW
         },
-        'middle': {
-            'left_cell': left_mid_middle_cell,
-            'penult_cell': penult_middle_cell,
-            'right_cell': right_middle_cell,
-            'row_height': UPPER_LOWER_CELL_ROW_HEIGHT,
+        MIDDLE_ROW: {
+            LEFT_CELL: left_mid_middle_cell,
+            PENULT_CELL: penult_middle_cell,
+            RIGHT_CELL: right_middle_cell,
+            ROW_HEIGHT: UPPER_LOWER_CELL_ROW_HEIGHT,
+            ROW_TYPE: MIDDLE_ROW
         },
-        'penult': {
-            'left_cell': left_mid_double_border_cell,
-            'penult_cell': penult_double_border_cell,
-            'right_cell': right_double_border_cell,
-            'row_height': PENULT_CELL_ROW_HEIGHT,
+        PENULT_ROW: {
+            LEFT_CELL: left_mid_double_border_cell,
+            PENULT_CELL: penult_double_border_cell,
+            RIGHT_CELL: right_double_border_cell,
+            ROW_HEIGHT: PENULT_CELL_ROW_HEIGHT,
+            ROW_TYPE: PENULT_ROW
         },
-        'lower': {
-            'left_cell': left_mid_lower_border_cell,
-            'penult_cell': penult_lower_border_cell,
-            'right_cell': right_lower_border_cell,
-            'row_height': UPPER_LOWER_CELL_ROW_HEIGHT,
+        LOWER_ROW: {
+            LEFT_CELL: left_mid_lower_border_cell,
+            PENULT_CELL: penult_lower_border_cell,
+            RIGHT_CELL: right_lower_border_cell,
+            ROW_HEIGHT: UPPER_LOWER_CELL_ROW_HEIGHT,
+            ROW_TYPE: LOWER_ROW
         },
     }
+    return rows_config
 
 
 def add_cell_params(cell: Cell, params: dict):
@@ -54,6 +71,13 @@ def upper_border_bold_if_header(cell: Cell) -> Cell:
     cell.up_width = 'bold'
 
     return cell
+
+
+def is_empty(params: dict) -> bool:
+    try:
+        return params[EMPTY]
+    except KeyError:
+        return False
     
     
 # (o==================================================================o)

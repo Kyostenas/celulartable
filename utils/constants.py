@@ -145,6 +145,19 @@ CONTENT_I = 1
 TYPE_NAME_I = 0
 TYPE_PARSER_I = 1
 
+HEADER_ROW = 'header'
+UPPER_ROW = 'upper'
+MIDDLE_ROW = 'middle'
+PENULT_ROW = 'penult'
+LOWER_ROW = 'lower'
+LEFT_CELL = 'left_cell'
+PENULT_CELL = 'penult_cell'
+RIGHT_CELL = 'right_cell'
+ROW_HEIGHT = 'row_height'
+ROW_TYPE = 'row_type'
+EMPTY = 'empty'
+
+
 # (o-----------------------------------------------------------/\-----o)
 #   CELULARTABLE SECTION (END)
 # (o==================================================================o)

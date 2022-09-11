@@ -16,10 +16,16 @@ from utils.constants import (
     PENULT,
     LAST,
     HEADER_I,
-    CONTENT_I
+    CONTENT_I,
+    HEADER_ROW,
+    UPPER_ROW,
+    MIDDLE_ROW,
+    PENULT_ROW,
+    LOWER_ROW,
 )
 from utils.micro_classes import (
-    Empty
+    Empty,
+    VoidCell
 )
 # from type_checking. import {
     
@@ -38,6 +44,8 @@ class CelularTable:
         self.column_alignments = []
         self.column_widths = []
         self.missing_value = DEFAULT_MISSING_VALUE
+        self.no_border_cells: List[Tuple[int, int]] = []
+        self.no_border_header_cells: List[int] = []
         self.__rows_config = create_rows_config()
         
         
@@ -77,7 +85,9 @@ class CelularTable:
             header = self.__validate_header_with_value(value=index)             
             column_body = self.__validate_col_with_value(value=index)
         
-        return {'header': header, 'content': column_body}
+        column = {'header': header, 'content': column_body}
+        
+        return column
     
     def get_columns(self, 
                     range_to_get: range=None, 
@@ -183,17 +193,21 @@ class CelularTable:
                  row_i: int = None, 
                  column_i: int = None, 
                 ) -> None:
-        value = self.__validate_value(value)
         row_i = self.__validate_row_i(row_i)
         column_i = self.__validate_column_i(row_i, column_i)
-        self.__add_value_to_row(value, row_i, column_i)
+        value = self.__validate_value(value, row_i, column_i)
+        if value is not None:
+            self.__add_value_to_row(value, row_i, column_i)
     
     def add_header_cell(self, 
+                        header_i: int,
                         value = None,
-                        column_i: int = None, 
+                        column_i: int = None,
                        ) -> None:
         column_i = self.__validate_header_column_i(column_i)
-        self.headers.insert(column_i, value)
+        value = self.__validate_header_name(value, header_i)
+        if value is not None:
+            self.headers.insert(column_i, value)
         
     def add_row(self,
                 data: list,
@@ -206,14 +220,26 @@ class CelularTable:
             )
             
     def add_headers(self, headers: list) -> None:
-        for header in headers:
-            self.add_header_cell(header)
+        for header_i, header in enumerate(headers):
+            self.add_header_cell(header_i, header)
         
     # (o-----------------------------------------( PRIVATE ))
     
-    def __validate_value(self, value):
+    def __validate_header_name(self, header: str, column_i: int) -> str:
+        if header is VoidCell:
+            self.no_border_header_cells.append(column_i)
+            return
+        if header in self.headers:
+            count = self.headers.count(header) + 1
+            return f'{header} {count}'
+        return header
+    
+    def __validate_value(self, value, row_i: int, column_i: int):
+        if value is VoidCell:
+            self.no_border_cells.append((row_i, column_i))
+            return 
         if value is Empty:
-            value = self.missing_value
+            return self.missing_value
         return value
       
     def __add_value_to_row(self,
@@ -339,7 +365,7 @@ class CelularTable:
             cols_widths=self.column_widths
         )
         headers = self.__create_row(
-            **self.__rows_config['header'],
+            **self.__rows_config[HEADER_ROW],
             value=self.headers,
             alignment=self.column_alignments,
             width=self.column_widths,
@@ -360,7 +386,7 @@ class CelularTable:
         try:
             self.rows[AT_LEAST_TWO]
             rows.append('\n'.join(self.__create_row(
-                **self.__rows_config['upper'],
+                **self.__rows_config[UPPER_ROW],
                 value=self.rows[FIRST],
                 alignment=alignment,
                 width=cols_widths,
@@ -375,7 +401,7 @@ class CelularTable:
             self.rows[AT_LEAST_FOUR]
             for mid_row in self.rows[SECOND_TO_ANTE_PENULT]:
                 rows.append('\n'.join(self.__create_row(
-                    **self.__rows_config['middle'],
+                    **self.__rows_config[MIDDLE_ROW],
                     value=mid_row,
                     alignment=alignment,
                     width=cols_widths
@@ -387,7 +413,7 @@ class CelularTable:
         try:
             self.rows[AT_LEAST_THREE]
             rows.append('\n'.join(self.__create_row(
-                **self.__rows_config['penult'],
+                **self.__rows_config[PENULT_ROW],
                 value=self.rows[PENULT],
                 alignment=alignment,
                 width=cols_widths
@@ -396,7 +422,7 @@ class CelularTable:
             try:
                 self.rows[AT_LEAST_ONE]
                 rows.append('\n'.join(self.__create_row(
-                    **self.__rows_config['penult'],
+                    **self.__rows_config[PENULT_ROW],
                     value=self.rows[LAST],
                     alignment=alignment,
                     width=cols_widths
@@ -408,7 +434,7 @@ class CelularTable:
         try:
             self.rows[AT_LEAST_THREE]
             rows.append('\n'.join(self.__create_row(
-                **self.__rows_config['lower'],
+                **self.__rows_config[LOWER_ROW],
                 value=self.rows[LAST],
                 alignment=alignment,
                 width=cols_widths
@@ -443,6 +469,7 @@ class CelularTable:
                      penult_cell,
                      right_cell,
                      row_height,
+                     row_type: str,
                      **cells_parameters
                      ) -> List[str]:
         """
@@ -479,8 +506,8 @@ class CelularTable:
             keep_lower_right_corner
         """
         try:
-            quantity_of_values = cells_parameters['value'].__len__()
-            cells_to_craft = cells_parameters['value']
+            quantity_of_values = cells_parameters['width'].__len__()
+            cells_to_craft = cells_parameters['width']
         except KeyError:
             quantity_of_values = 0
             cells_to_craft = []
@@ -491,7 +518,10 @@ class CelularTable:
             right=right_cell,
         )
         
-        param_groups = self.__get_groups_of_parameters(cells_parameters)
+        param_groups = self.__get_groups_of_parameters(
+            cells_parameters,
+            row_type
+        )
         unjoined_cells = []
         for cell_config_i, _ in enumerate(cells_to_craft):
             cell_creator = row_config[cell_config_i]
@@ -516,7 +546,10 @@ class CelularTable:
 
         return joined_cell_parts
     
-    def __get_groups_of_parameters(self, parameters: dict) -> List[dict]:
+    def __get_groups_of_parameters(self, 
+                                   parameters: dict,
+                                   row_type: str,
+                                  ) -> List[dict]:
         keys = list(parameters.keys())
         values = list(parameters.values())
         column_quantity = self.column_count
@@ -530,7 +563,6 @@ class CelularTable:
                 except IndexError:
                     pass
                 
-                        
         return param_groups
         
     

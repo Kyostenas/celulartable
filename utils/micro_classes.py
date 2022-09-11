@@ -5,3 +5,7 @@ class Empty:
 
 class NoMatch:
     ...
+    
+    
+class VoidCell:
+    ...
