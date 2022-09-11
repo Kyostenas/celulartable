@@ -38,7 +38,7 @@ class CelularTable:
         self.rows = []
         self.column_count = 0
         self.row_count = 0
-        self.show_headers = False
+        self.show_headers = True
         self.cell_types = {}
         self.column_types = []
         self.column_alignments = []
@@ -48,6 +48,11 @@ class CelularTable:
         self.no_border_header_cells: List[int] = []
         self.__rows_config = create_rows_config()
         
+    def __repr__(self) -> str:
+        return self.craft()
+        
+    def __str__(self) -> str:
+        return self.craft()        
         
     # (o==================================================================o)
     #   COLUMN GETTING SECTION (START)
@@ -72,9 +77,9 @@ class CelularTable:
             
         ### Params::
         
-            index: int | Any        # Specify index or header of column.
-            missing_vals: bool      # False: Uses "Empty" class.
-                                    # True: Uses self.missing_value
+            index: int | Any    # Specify index or header of column.
+            missing_vals: bool  # False: Uses "Empty" class.
+                                # True: Uses self.missing_value
         """
         header = self.__validate_header_with_number(index)
         column_body = self.__validate_col_with_number(
@@ -372,8 +377,12 @@ class CelularTable:
             show_lower_border=[False]*self.column_count
             
         )
-        print('\n'.join(headers))
-        print('\n'.join(all_rows))
+        table = []
+        if headers is not None:
+            table += headers
+        table += all_rows
+        
+        return '\n'.join(table)
         
 
     
@@ -522,6 +531,8 @@ class CelularTable:
             cells_parameters,
             row_type
         )
+        if param_groups is None:
+            return None
         unjoined_cells = []
         for cell_config_i, _ in enumerate(cells_to_craft):
             cell_creator = row_config[cell_config_i]
@@ -550,6 +561,8 @@ class CelularTable:
                                    parameters: dict,
                                    row_type: str,
                                   ) -> List[dict]:
+        if not self.show_headers and row_type is HEADER_ROW:
+            return
         keys = list(parameters.keys())
         values = list(parameters.values())
         column_quantity = self.column_count
