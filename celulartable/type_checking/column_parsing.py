@@ -1,6 +1,6 @@
 from typing import List, Set
 
-from utils.constants import (
+from ..utils.constants import (
     TYPE_NAMES,
     COLUMN_TYPES
 )

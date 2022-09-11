@@ -1,7 +1,9 @@
 from typing import List, NamedTuple
-from utils.micro_classes import (
+
+from ..utils.micro_classes import (
     Empty,
-    NoMatch
+    NoMatch,
+    VoidCell
 )
 
 
@@ -103,6 +105,7 @@ TYPE_NAMES = TypeNames(
     bytes_=bytes.__name__,
     none_type_=type(None).__name__,
     empty=Empty.__name__,
+    void_cell=VoidCell.__name__,
     no_match=NoMatch.__name__,
 )
 COLUMN_TYPES = AdmittedTypesForColumn(

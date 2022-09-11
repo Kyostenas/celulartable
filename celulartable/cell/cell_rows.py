@@ -1,5 +1,5 @@
-from cell.cell import Cell
-from utils.constants import (
+from ..cell.cell import Cell
+from ..utils.constants import (
     EMPTY,
     PENULT_CELL_ROW_HEIGHT,
     ROW_TYPE, 

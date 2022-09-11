@@ -1,11 +1,11 @@
 
 from typing import Dict, Tuple, List
 
-from cell.cell_styles import (
+from ..cell.cell_styles import (
     style_names,
     Style
 )
-from utils.constants import (
+from ..utils.constants import (
     ACCEPTED_WIDTHS,
     ALIGNMENTS,
     BOLD_WIDTH_NAME,

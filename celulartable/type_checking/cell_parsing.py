@@ -1,6 +1,6 @@
-from typing import Any, List, Tuple, Union
+from typing import Any, Tuple, Union
 
-from utils.micro_classes import Empty
+from ..utils.micro_classes import Empty
 
 from .type_parsers import (
     is_none,
