@@ -16,6 +16,7 @@ class TypeNames(NamedTuple):
     bytes_: str
     none_type_: str
     empty: str
+    void_cell: str
     no_match: str
 
 
