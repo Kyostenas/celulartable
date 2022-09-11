@@ -317,7 +317,9 @@ class CelularTable:
         widths = []
         columns = self.get_columns()
         for header, data in columns.items():
-            header_width = self.__get_piece_width(header)
+            header_width = 0
+            if self.show_headers:
+                header_width = self.__get_piece_width(header)
             col_width = max(list(map(
                 self.__get_piece_width,
                 data
@@ -362,6 +364,8 @@ class CelularTable:
     # (o-----------------------------------------( PUBLIC INTERFACE ))
     
     def craft(self):
+        if self.headers.__len__() == 0:
+            self.show_headers = False
         self.find_types()
         self.find_column_alignments()
         self.find_column_widths()
