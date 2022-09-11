@@ -1,13 +1,13 @@
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, List, Tuple, Union
 
-from .cell.cell import Cell
-from .cell.cell_rows import create_rows_config
-from .type_checking.cell_parsing import try_evey_type
-from .type_checking.column_parsing import get_column_type_name
-from .utils.constants import (
+from ..cell.cell import Cell
+from ..cell.cell_rows import create_rows_config
+from ..type_checking.cell_parsing import try_evey_type
+from ..type_checking.column_parsing import get_column_type_name
+from ..utils.constants import (
     ALIGNMENTS_PER_TYPE,
     AT_LEAST_THREE,
-    DEFAULT_MISSING_VALUE,
+    DEFAULT_MISSING_VALUE, 
     SECOND_TO_ANTE_PENULT,
     AT_LEAST_ONE,
     AT_LEAST_TWO,
@@ -23,7 +23,7 @@ from .utils.constants import (
     PENULT_ROW,
     LOWER_ROW,
 )
-from .utils.micro_classes import (
+from ..utils.micro_classes import (
     Empty,
     VoidCell
 )
