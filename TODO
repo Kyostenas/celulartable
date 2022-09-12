@@ -1,17 +1,17 @@
-Version 0.2.0:
+Version 0.1.0:
     ☐ FEAT: Add support for empty cells. @low
     ☐ FEAT: Add float alignment in Cell. @low
     ☐ FEAT: Implement border manipulation. @low
     ☐ FEAT: Add alignment indicator. @low
     
 Archive:
-  ✔ FEAT: Add a regex for each type @done(22-09-04 15:37) @project(Version 0.1.0.Type parsing)
-  ✔ Implement type parsing for each cell. @done(22-09-04 15:37) @project(Version 0.1.0.Type parsing)
-  ✔ Implement type parsing for each column. @done(22-09-04 15:37) @project(Version 0.1.0.Type parsing)
-  ✔ Implement column alignment parsing. @done(22-09-04 15:37) @project(Version 0.1.0.Type parsing)
-  ✔ CHORE: Add setup.py @high @done(22-09-11 17:28) @project(Version 0.1.0.Publish as package)
-  ✔ CHORE: Structure the package. @high @started(22-09-11 16:02) @done(22-09-11 17:28) @lasted(1h26m37s) @project(Version 0.1.0.Publish as package)
-  ✔ CHORE: Change imports to correct form. @high @done(22-09-11 18:57) @project(Version 0.1.0.Publish as package)
-  ✔ FIX: Bug on repeated header. @critical @started(22-09-11 13:17) @done(22-09-11 14:36) @lasted(1h19m3s) @project(Version 0.1.0)
-  ✔ FEAT: Add possibility of no header. @high @started(22-09-11 15:11) @done(22-09-11 15:50) @lasted(39m29s) @project(Version 0.1.0)
-  ✔ FIX: Missing value not showing. @high @done(22-09-11 15:51) @project(Version 0.1.0)
+  ✔ FEAT: Add a regex for each type @done(22-09-04 15:37) @project(Version 0.0.1.Type parsing)
+  ✔ Implement type parsing for each cell. @done(22-09-04 15:37) @project(Version 0.0.1.Type parsing)
+  ✔ Implement type parsing for each column. @done(22-09-04 15:37) @project(Version 0.0.1.Type parsing)
+  ✔ Implement column alignment parsing. @done(22-09-04 15:37) @project(Version 0.0.1.Type parsing)
+  ✔ CHORE: Add setup.py @high @done(22-09-11 17:28) @project(Version 0.0.1.Publish as package)
+  ✔ CHORE: Structure the package. @high @started(22-09-11 16:02) @done(22-09-11 17:28) @lasted(1h26m37s) @project(Version 0.0.1.Publish as package)
+  ✔ CHORE: Change imports to correct form. @high @done(22-09-11 18:57) @project(Version 0.0.1.Publish as package)
+  ✔ FIX: Bug on repeated header. @critical @started(22-09-11 13:17) @done(22-09-11 14:36) @lasted(1h19m3s) @project(Version 0.0.1)
+  ✔ FEAT: Add possibility of no header. @high @started(22-09-11 15:11) @done(22-09-11 15:50) @lasted(39m29s) @project(Version 0.0.1)
+  ✔ FIX: Missing value not showing. @high @done(22-09-11 15:51) @project(Version 0.0.1)
